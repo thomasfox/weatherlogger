@@ -12,6 +12,7 @@
   <canvas id="temperatureCanvas" width="800" height="400" style="float:left;"></canvas>
   <canvas id="pressureCanvas" width="800" height="400" style="float:left;"></canvas>
   <br style="clear:both;" />
+  <span>Date:</span>
 <?php
 include "include/config.php";
 include "include/query_functions.php";
@@ -26,17 +27,22 @@ renderDates("wind", $conn, 'dateSelector');
 $conn->close();
 
 ?>
-
+  <span>average wind over Points:</span>
+  <select id="averageSelector">
+    <option value="1">1</option>
+    <option value="10">10</option>
+    <option value="50" selected="selected">50</option>
+  </select>
   <script>
 
-function loadChartData(table, column, config, date, onReady) {
+function loadChartData(table, column, config, date, average, onReady) {
 	var clientId = '<?php include "include/config.php"; echo $basicAuthUser; ?>';
 	var clientSecret = '<?php include "include/config.php"; echo $basicAuthPassword; ?>';
 
 	var authorizationBasic = window.btoa(clientId + ':' + clientSecret);
 
 	var request = new XMLHttpRequest();
-	var url = "querydata.php?table=" + table + "&column=" + column + "&date=" + date;
+	var url = "querydata.php?table=" + table + "&column=" + column + "&date=" + date + "&average=" + average;
 	request.open('GET', url, true);
 	
 	request.responseType = "json";
@@ -55,7 +61,7 @@ function loadChartData(table, column, config, date, onReady) {
 	};
 }
 
-function showChart(table, column, label, date, canvasId) {
+function showChart(table, column, label, date, average, canvasId) {
 	var color = Chart.helpers.color;
 	var config = {
 		type: 'line',
@@ -98,24 +104,28 @@ function showChart(table, column, label, date, canvasId) {
 		}
 	};
 
-	loadChartData(table, column, config, date, function() {
+	loadChartData(table, column, config, date, average, function() {
 		var ctx = document.getElementById(canvasId).getContext('2d'); 
 		window[table + "_" + column] = new Chart(ctx, config);
 	})
 }
 
-document.getElementById('dateSelector').addEventListener('change', function(event) {
-	loadChartData("wind", "speed", window.wind_speed.config, event.target.value, function() {window.wind_speed.update();})
-	loadChartData("wind", "direction", window.wind_direction.config, event.target.value, function() {window.wind_direction.update();})
-	loadChartData("temperature", "temperature", window.temperature_temperature.config, event.target.value, function() {window.temperature_temperature.update();})
-	loadChartData("pressure", "pressure", window.pressure_pressure.config, event.target.value, function() {window.pressure_pressure.update();})
-});
+function loadAndShowCharts()
+{
+	loadChartData("wind", "speed", window.wind_speed.config, document.getElementById('dateSelector').value, document.getElementById('averageSelector').value, function() {window.wind_speed.update();})
+	loadChartData("wind", "direction", window.wind_direction.config, document.getElementById('dateSelector').value, document.getElementById('averageSelector').value, function() {window.wind_direction.update();})
+	loadChartData("temperature", "temperature", window.temperature_temperature.config, document.getElementById('dateSelector').value, 1, function() {window.temperature_temperature.update();})
+	loadChartData("pressure", "pressure", window.pressure_pressure.config, document.getElementById('dateSelector').value, 1, function() {window.pressure_pressure.update();})
+}
+
+document.getElementById('dateSelector').addEventListener('change', function(event) {loadAndShowCharts();})
+document.getElementById('averageSelector').addEventListener('change', function(event) {loadAndShowCharts();})
 
 window.onload = function() {
-	showChart("wind", "speed", 'Windgeschwindigkeit [kt]', document.getElementById('dateSelector').value, 'windSpeedCanvas');
-	showChart("wind", "direction", 'Windrichtung [Grad]', document.getElementById('dateSelector').value, 'windDirectionCanvas');
-	showChart("temperature", "temperature", 'Temperatur + 100 [Grad]', document.getElementById('dateSelector').value, 'temperatureCanvas');
-	showChart("pressure", "pressure", 'Luftdruck [hPa]', document.getElementById('dateSelector').value, 'pressureCanvas');
+	showChart("wind", "speed", 'Windgeschwindigkeit [kt]', document.getElementById('dateSelector').value, document.getElementById('averageSelector').value, 'windSpeedCanvas');
+	showChart("wind", "direction", 'Windrichtung [Grad]', document.getElementById('dateSelector').value, document.getElementById('averageSelector').value, 'windDirectionCanvas');
+	showChart("temperature", "temperature", 'Temperatur + 100 [Grad]', document.getElementById('dateSelector').value, 1, 'temperatureCanvas');
+	showChart("pressure", "pressure", 'Luftdruck [hPa]', document.getElementById('dateSelector').value, 1, 'pressureCanvas');
 };
   </script>
 </body>

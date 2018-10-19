@@ -48,7 +48,7 @@ function renderDates($tableName, $conn, $selectId)
   }
 }
 
-function columnDataAsJson($tableName, $columnName, $columnFactor, $date, $conn)
+function columnDataAsJson($tableName, $columnName, $columnFactor, $date, $conn, $averageOver=1)
 {
   $sql = "SELECT " . $columnName . ", time FROM " . $tableName . " WHERE time > '" . $date->format('Y-m-d 00:00:00') . "' AND time <= '" . $date->format('Y-m-d 23:59:59') . "' ORDER BY time ASC";
   $result = $conn->query($sql);
@@ -56,16 +56,24 @@ function columnDataAsJson($tableName, $columnName, $columnFactor, $date, $conn)
   if ($conn->errno == 0 && $result->num_rows > 0)
   {
     $first = true;
+    $averageCount = 0;
+    $averagedValue = 0;
     while($row = $result->fetch_assoc()) 
     {
+      $averageCount++;
       $time = $row["time"];
-      $value = $row[$columnName];
-      if (!$first)
+      $averagedValue += $row[$columnName];
+      if ($averageCount == $averageOver)
       {
-        echo ",";
+        if (!$first)
+        {
+          echo ",";
+        }
+        echo '{"x": "' . $time . '","y": ' . ($averagedValue / $columnFactor / $averageCount) . '}';
+        $first = false;
+        $averageCount = 0;
+        $averagedValue = 0;
       }
-      echo '{"x": "' . $time . '","y": ' . ($value / $columnFactor) . '}';
-      $first = false;
     }
   }
   else

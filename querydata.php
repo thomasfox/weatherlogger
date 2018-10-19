@@ -10,6 +10,7 @@ if ($conn->connect_error)
 }
 $table = $_GET["table"];
 $column = $_GET["column"];
+
 $date = $_GET["date"];
 if($date == null)
 {
@@ -19,6 +20,12 @@ else
 {
   $date = DateTime::createFromFormat("Y-m-d", $date);
 }
+$average = $_GET["average"];
+if($average == null)
+{
+  $average = 1;
+}
+
 $factors = array(
   "wind"=>array(
     "speed"=>10,
@@ -29,5 +36,5 @@ $factors = array(
   "pressure"=>array(
     "pressure"=>10));
 $factor = $factors[$table][$column];
-columnDataAsJson($table, $column, $factor, $date, $conn);
+columnDataAsJson($table, $column, $factor, $date, $conn, $average);
 ?>
