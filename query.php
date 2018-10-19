@@ -30,8 +30,8 @@ $conn->close();
   <script>
 
 function loadChartData(table, column, config, date, onReady) {
-	var clientId = <?php include "include/config.php"; echo $basicAuthUser; ?>
-	var clientSecret = <?php include "include/config.php"; echo $basicAuthPassword; ?>;
+	var clientId = '<?php include "include/config.php"; echo $basicAuthUser; ?>';
+	var clientSecret = '<?php include "include/config.php"; echo $basicAuthPassword; ?>';
 
 	var authorizationBasic = window.btoa(clientId + ':' + clientSecret);
 
