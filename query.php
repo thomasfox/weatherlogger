@@ -97,6 +97,9 @@ function showChart(table, column, label, date, average, canvasId) {
 			title: {
 				display: false,
 			},
+			legend: {
+				display: false,
+			},
 			scales: {
 				xAxes: [{
 					type: 'time',
