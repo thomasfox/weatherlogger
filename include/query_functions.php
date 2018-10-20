@@ -47,7 +47,7 @@ function renderDates($tableName, $conn, $selectId, $class)
     while($row = $result->fetch_assoc()) 
     {
       $time = DateTime::createFromFormat("Y-m-d", $row["distinctdate"]);
-      echo "<option value=" . $time->format('Y-m-d') . ">" . $time->format('d.m.Y') . "</option>";
+      echo '<option value="' . $time->format('Y-m-d') . '">' . $time->format('d.m.Y') . '</option>';
     }
     echo "</select>";
   }
@@ -57,9 +57,20 @@ function renderDates($tableName, $conn, $selectId, $class)
   }
 }
 
-function columnDataAsJson($tableName, $columnName, $columnFactor, $columnOffset, $date, $conn, $averageOver=1)
+function renderTimes($offset, $default, $selectId, $class)
 {
-  $sql = "SELECT " . $columnName . ", time FROM " . $tableName . " WHERE time > '" . $date->format('Y-m-d 00:00:00') . "' AND time <= '" . $date->format('Y-m-d 23:59:59') . "' ORDER BY time ASC";
+  echo '<select id="' . $selectId . '" class="' . $class . '">';
+  for ($i = $offset; $i < 24 + $offset; $i++)
+  {
+  	$selectedString = ($i == $default ? ' selected="selected"' : '');
+    echo '<option value="' .$i . ':00:00"' . $selectedString . '>' .$i . ':00</option>';
+  }
+  echo "</select>";
+}
+
+function columnDataAsJson($tableName, $columnName, $columnFactor, $columnOffset, $dateFrom, $dateTo, $conn, $averageOver=1)
+{
+  $sql = "SELECT " . $columnName . ", time FROM " . $tableName . " WHERE time > '" . $dateFrom->format('Y-m-d H:i:s') . "' AND time <= '" . $dateTo->format('Y-m-d H:i:s') . "' ORDER BY time ASC";
   $result = $conn->query($sql);
   echo "[";
   if ($conn->errno == 0 && $result->num_rows > 0)

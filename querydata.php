@@ -7,15 +7,34 @@ $conn = getDatabaseConnection($dbServer, $dbUser, $dbPassword, $dbName);
 $table = $_GET["table"];
 $column = $_GET["column"];
 
-$date = $_GET["date"];
-if($date == null)
+$timeFrom = $_GET["timeFrom"];
+if($timeFrom == null)
 {
-  $date = new DateTime();
+  $timeFrom = "00:00:00";
 }
 else
 {
   $date = DateTime::createFromFormat("Y-m-d", $date);
 }
+
+$timeTo = $_GET["timeTo"];
+if($timeTo == null)
+{
+  $timeTo = "24:00:00";
+}
+else
+{
+  $date = DateTime::createFromFormat("Y-m-d", $date);
+}
+
+$date = $_GET["date"];
+if($date == null)
+{
+	$date = new DateTime().format("Y-m-d");
+}
+$dateFrom = DateTime::createFromFormat("Y-m-d H:i:s", $date . ' ' . $timeFrom);
+$dateTo = DateTime::createFromFormat("Y-m-d H:i:s", $date . ' ' . $timeTo);
+
 $average = $_GET["average"];
 if($average == null)
 {
@@ -39,5 +58,5 @@ if ($table == "temperature" && $column =="temperature")
 {
   $offset=100;
 }
-columnDataAsJson($table, $column, $factor, $offset, $date, $conn, $average);
+columnDataAsJson($table, $column, $factor, $offset, $dateFrom, $dateTo, $conn, $average);
 ?>
