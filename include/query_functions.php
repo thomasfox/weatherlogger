@@ -1,4 +1,13 @@
 <?php
+function getDatabaseConnection($dbServer, $dbUser, $dbPassword, $dbName)
+{
+  $conn = new mysqli($dbServer, $dbUser, $dbPassword, $dbName);
+  if ($conn->connect_error)
+  {
+    die("Connection failed: " . $conn->connect_error);
+  }
+  return $conn;
+}
 
 function displayData($tableName, $columnFactors, $conn)
 {
@@ -28,13 +37,13 @@ function displayData($tableName, $columnFactors, $conn)
   }
 }
 
-function renderDates($tableName, $conn, $selectId)
+function renderDates($tableName, $conn, $selectId, $class)
 {
   $sql = "SELECT DISTINCT(DATE(time)) as distinctdate FROM " . $tableName . " ORDER BY distinctdate ASC";
   $result = $conn->query($sql);
   if ($conn->errno == 0 && $result->num_rows > 0)
   {
-    echo '<select id="' . $selectId . '">';
+    echo '<select id="' . $selectId . '" class="' . $class . '">';
     while($row = $result->fetch_assoc()) 
     {
       $time = DateTime::createFromFormat("Y-m-d", $row["distinctdate"]);

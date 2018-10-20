@@ -1,38 +1,56 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>query weather data</title>
+<title>Wetterdaten abfragen</title>
+<meta charset="UTF-8"> 
+<link rel="stylesheet" href="css/bootstrap.min.css" />
+<link rel="stylesheet" href="css/weatherlogger.css" />
 </head>
-<body>
-  <script src="js/moment.min.js"></script>
-  <script src="js/Chart.min.js"></script>
-  <canvas id="windSpeedCanvas" width="800" height="400" style="float:left;"></canvas>
-  <canvas id="windDirectionCanvas" width="800" height="400" style="float:left;"></canvas>
-  <br style="clear:both;" />
-  <canvas id="temperatureCanvas" width="800" height="400" style="float:left;"></canvas>
-  <canvas id="pressureCanvas" width="800" height="400" style="float:left;"></canvas>
-  <br style="clear:both;" />
-  <span>Date:</span>
 <?php
 include "include/config.php";
 include "include/query_functions.php";
-
-$conn = new mysqli($dbServer, $dbUser, $dbPassword, $dbName);
-if ($conn->connect_error) 
-{
-  die("Connection failed: " . $conn->connect_error);
-}
-renderDates("wind", $conn, 'dateSelector');
-
-$conn->close();
-
 ?>
-  <span>average wind over Points:</span>
-  <select id="averageSelector">
-    <option value="1">1</option>
-    <option value="10">10</option>
-    <option value="50" selected="selected">50</option>
-  </select>
+<body>
+  <script src="js/moment.min.js"></script>
+  <script src="js/Chart.min.js"></script>
+  
+  <div class="container-fluid">
+    <h1 class="text-center">Wind und Wetter - SVS Wetterstation</h1>
+    <div class="row justify-content-center my-3">
+  <form class="form-inline">
+      <label class="sr-only" for="dateSelector">Datum:</label>
+<?php
+$conn = getDatabaseConnection($dbServer, $dbUser, $dbPassword, $dbName);
+renderDates("wind", $conn, 'dateSelector', 'form-control mb-2 mr-sm-2');
+$conn->close();
+?>
+      <label class="sr-only" for="averageSelector" >Mittel über Punkte:</label>
+      <select class="form-control mb-2 mr-sm-2" id="averageSelector">
+        <option value="1">Kein Mitteln</option>
+        <option value="10">10 Punkte mitteln</option>
+        <option value="50" selected="selected">50 Punkte mitteln</option>
+      </select>
+  </form>
+    </div>
+    <div class="row">
+      <div class="col-lg-6">
+        <canvas id="windSpeedCanvas" class="wl"></canvas>
+      </div>
+      <div class="col-lg-6">
+        <canvas id="windDirectionCanvas" class="wl"></canvas>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-4">
+        <canvas id="temperatureCanvas" class="wl"></canvas>
+      </div>
+      <div class="col-lg-4">
+      </div>
+      <div class="col-lg-4">
+        <canvas id="pressureCanvas" class="wl"></canvas>
+      </div>
+    </div>
+  </div>
   <script>
 
 function loadChartData(table, column, config, date, average, onReady) {
@@ -74,7 +92,7 @@ function showChart(table, column, label, date, average, canvasId) {
 			}]
 		},
 		options: {
-			responsive: false,
+			responsive: true,
 			title: {
 				display: false,
 			},
