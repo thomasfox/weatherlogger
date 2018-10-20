@@ -45,6 +45,7 @@ $conn->close();
         <canvas id="temperatureCanvas" class="wl"></canvas>
       </div>
       <div class="col-lg-4">
+        <canvas id="humidityCanvas" class="wl"></canvas>
       </div>
       <div class="col-lg-4">
         <canvas id="pressureCanvas" class="wl"></canvas>
@@ -133,6 +134,7 @@ function loadAndShowCharts()
 	loadChartData("wind", "speed", window.wind_speed.config, document.getElementById('dateSelector').value, document.getElementById('averageSelector').value, function() {window.wind_speed.update();})
 	loadChartData("wind", "direction", window.wind_direction.config, document.getElementById('dateSelector').value, document.getElementById('averageSelector').value, function() {window.wind_direction.update();})
 	loadChartData("temperature", "temperature", window.temperature_temperature.config, document.getElementById('dateSelector').value, 1, function() {window.temperature_temperature.update();})
+	loadChartData("temperature", "humidity", window.temperature_humidity.config, document.getElementById('dateSelector').value, 1, function() {window.temperature_humidity.update();})
 	loadChartData("pressure", "pressure", window.pressure_pressure.config, document.getElementById('dateSelector').value, 1, function() {window.pressure_pressure.update();})
 }
 
@@ -143,6 +145,7 @@ window.onload = function() {
 	showChart("wind", "speed", 'Windgeschwindigkeit [kt]', document.getElementById('dateSelector').value, document.getElementById('averageSelector').value, 'windSpeedCanvas');
 	showChart("wind", "direction", 'Windrichtung [Grad]', document.getElementById('dateSelector').value, document.getElementById('averageSelector').value, 'windDirectionCanvas');
 	showChart("temperature", "temperature", 'Temperatur + 100 [Grad]', document.getElementById('dateSelector').value, 1, 'temperatureCanvas');
+	showChart("temperature", "humidity", 'Luftfeuchtigkeit [%]', document.getElementById('dateSelector').value, 1, 'humidityCanvas');
 	showChart("pressure", "pressure", 'Luftdruck [hPa]', document.getElementById('dateSelector').value, 1, 'pressureCanvas');
 };
   </script>

@@ -28,7 +28,9 @@ $factors = array(
 	"gusts"=>10,
 	"direction"=>1),
   "temperature"=>array(
-    "temperature"=>10),
+    "temperature"=>10,
+    "humidity"=>1
+  ),
   "pressure"=>array(
     "pressure"=>10));
 $factor = $factors[$table][$column];
