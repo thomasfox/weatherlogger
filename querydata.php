@@ -34,5 +34,10 @@ $factors = array(
   "pressure"=>array(
     "pressure"=>10));
 $factor = $factors[$table][$column];
-columnDataAsJson($table, $column, $factor, $date, $conn, $average);
+$offset = 0;
+if ($table == "temperature" && $column =="temperature")
+{
+  $offset=100;
+}
+columnDataAsJson($table, $column, $factor, $offset, $date, $conn, $average);
 ?>

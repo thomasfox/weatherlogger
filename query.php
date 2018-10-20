@@ -144,7 +144,7 @@ document.getElementById('averageSelector').addEventListener('change', function(e
 window.onload = function() {
 	showChart("wind", "speed", 'Windgeschwindigkeit [kt]', document.getElementById('dateSelector').value, document.getElementById('averageSelector').value, 'windSpeedCanvas');
 	showChart("wind", "direction", 'Windrichtung [Grad]', document.getElementById('dateSelector').value, document.getElementById('averageSelector').value, 'windDirectionCanvas');
-	showChart("temperature", "temperature", 'Temperatur + 100 [Grad]', document.getElementById('dateSelector').value, 1, 'temperatureCanvas');
+	showChart("temperature", "temperature", 'Temperatur [°C]', document.getElementById('dateSelector').value, 1, 'temperatureCanvas');
 	showChart("temperature", "humidity", 'Luftfeuchtigkeit [%]', document.getElementById('dateSelector').value, 1, 'humidityCanvas');
 	showChart("pressure", "pressure", 'Luftdruck [hPa]', document.getElementById('dateSelector').value, 1, 'pressureCanvas');
 };
