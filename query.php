@@ -50,14 +50,17 @@ renderTimes(1, 24, 'timeSelectorTo', 'form-control mb-2 mr-sm-3');
       </div>
     </div>
     <div class="row">
-      <div class="col-lg-4">
+      <div class="col-lg-3">
         <canvas id="temperatureCanvas" class="wl"></canvas>
       </div>
-      <div class="col-lg-4">
+      <div class="col-lg-3">
         <canvas id="humidityCanvas" class="wl"></canvas>
       </div>
-      <div class="col-lg-4">
+      <div class="col-lg-3">
         <canvas id="pressureCanvas" class="wl"></canvas>
+      </div>
+      <div class="col-lg-3">
+        <canvas id="rainCanvas" class="wl"></canvas>
       </div>
     </div>
   </div>
@@ -148,6 +151,7 @@ function loadAndShowCharts()
 	loadChartData("temperature", "temperature", window.temperature_temperature.config, document.getElementById('dateSelector').value, document.getElementById('timeSelectorFrom').value, document.getElementById('timeSelectorTo').value, 1, function() {window.temperature_temperature.update();})
 	loadChartData("temperature", "humidity", window.temperature_humidity.config, document.getElementById('dateSelector').value, document.getElementById('timeSelectorFrom').value, document.getElementById('timeSelectorTo').value, 1, function() {window.temperature_humidity.update();})
 	loadChartData("pressure", "pressure", window.pressure_pressure.config, document.getElementById('dateSelector').value, document.getElementById('timeSelectorFrom').value, document.getElementById('timeSelectorTo').value, 1, function() {window.pressure_pressure.update();})
+	loadChartData("rain", "yearly", window.rain_rate.config, document.getElementById('dateSelector').value, document.getElementById('timeSelectorFrom').value, document.getElementById('timeSelectorTo').value, 1, function() {window.rain_rate.update();})
 }
 
 document.getElementById('dateSelector').addEventListener('change', function(event) {loadAndShowCharts();})
@@ -161,6 +165,7 @@ window.onload = function() {
 	showChart("temperature", "temperature", 'Temperatur [°C]', document.getElementById('dateSelector').value, document.getElementById('timeSelectorFrom').value, document.getElementById('timeSelectorTo').value, 1, 'temperatureCanvas');
 	showChart("temperature", "humidity", 'Luftfeuchtigkeit [%]', document.getElementById('dateSelector').value, document.getElementById('timeSelectorFrom').value, document.getElementById('timeSelectorTo').value, 1, 'humidityCanvas');
 	showChart("pressure", "pressure", 'Luftdruck [hPa]', document.getElementById('dateSelector').value, document.getElementById('timeSelectorFrom').value, document.getElementById('timeSelectorTo').value, 1, 'pressureCanvas');
+	showChart("rain", "yearly", 'Regenmenge Jahr [mm]', document.getElementById('dateSelector').value, document.getElementById('timeSelectorFrom').value, document.getElementById('timeSelectorTo').value, 1, 'rainCanvas');
 };
   </script>
 </body>

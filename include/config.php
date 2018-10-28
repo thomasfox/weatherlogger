@@ -11,6 +11,7 @@ $clientrawUrl = TODO;
 $windStoreIntervalSeconds = 2;
 $temperatureStoreIntervalSeconds = 300;
 $pressureStoreIntervalSeconds = 600;
+$rainStoreIntervalSeconds = 300;
 
 # Username and password, assuming that the page is protected by basic auth
 $basicAuthUser = TODO;

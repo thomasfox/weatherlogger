@@ -51,8 +51,13 @@ $factors = array(
     "humidity"=>1
   ),
   "pressure"=>array(
-    "pressure"=>10));
-$factor = $factors[$table][$column];
+    "pressure"=>10
+  ),
+  "rain"=>array(
+    "rate"=>1000,
+    "yearly"=>10
+  ));
+  $factor = $factors[$table][$column];
 $offset = 0;
 if ($table == "temperature" && $column =="temperature")
 {

@@ -23,7 +23,10 @@ $temperatureRecorded = (int) (($temperature * 10) + 1000);
 $humidity = (float) $data[5];
 $pressure = (float) $data[6];
 $pressureRecorded = (int) ($pressure * 10);
-
+$rainRate = (float) $data[10];
+$rainRateRecorded = (int) ($rainRate * 1000);
+$yearlyRain = (float) $data[9];
+$yearlyRainRecorded = (int) ($yearlyRain * 10);
 //echo '<br/>durchschnittliche windgeschwindigkeit*10 in knoten: ' . $windspeedRecorded . '<br/>';
 //echo 'windgeschwindigkeit boen*10 in knoten: ' . $windspeedGustsRecorded . '<br/>';
 //echo 'windrichtung in Grad:' . $winddirection . '<br/>';
@@ -53,6 +56,12 @@ storeWhenThresholdIsReached("temperature", $temperatureData, $temperatureStoreIn
 $pressureData = array(
     "pressure"  => $pressureRecorded);
 storeWhenThresholdIsReached("pressure", $pressureData, $pressureStoreIntervalSeconds, $databaseTime, $conn);
+
+$rainData = array(
+	"rate"  => $rainRateRecorded,
+	"yearly"  => $yearlyRainRecorded);
+storeWhenThresholdIsReached("rain", $rainData, $rainStoreIntervalSeconds, $databaseTime, $conn);
+
 
 $conn->close();
 
