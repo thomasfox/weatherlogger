@@ -79,17 +79,20 @@ function loadChartData(table, column, config, date, timeFrom, timeTo, average, o
 	request.responseType = "json";
 	request.setRequestHeader('Authorization', 'Basic ' + authorizationBasic);
 	request.setRequestHeader('Accept', 'application/json');
-	request.send();
 
 	request.onload = function () {
 		var response = request.response;
-		for (var i = 0; i < response.length; i++) {
-			response[i].x = new Date(response[i].x);
+		if (response != null)
+		{
+			for (var i = 0; i < response.length; i++) {
+				response[i].x = new Date(response[i].x);
+			}
 		}
 		config.data.datasets[0].data = response;
-		
+
 		onReady();
 	};
+	request.send();
 }
 
 function showChart(table, column, label, date, timeFrom, timeTo, average, canvasId) {
