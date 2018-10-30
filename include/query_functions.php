@@ -43,7 +43,7 @@ function renderDates($tableName, $conn, $selectId, $class)
   $result = $conn->query($sql);
   if ($conn->errno == 0 && $result->num_rows > 0)
   {
-    echo '<select id="' . $selectId . '" class="' . $class . '">';
+    echo '<select id="' . $selectId . '" class="' . $class . '" onchange="loadDataAndUpdateCharts()">';
     while($row = $result->fetch_assoc()) 
     {
       $time = DateTime::createFromFormat("Y-m-d", $row["distinctdate"]);
@@ -59,7 +59,7 @@ function renderDates($tableName, $conn, $selectId, $class)
 
 function renderTimes($offset, $default, $selectId, $class)
 {
-  echo '<select id="' . $selectId . '" class="' . $class . '">';
+  echo '<select id="' . $selectId . '" class="' . $class . '" onchange="loadDataAndUpdateCharts()">';
   for ($i = $offset; $i < 24 + $offset; $i++)
   {
   	$selectedString = ($i == $default ? ' selected="selected"' : '');
