@@ -39,6 +39,7 @@ function displayData($tableName, $columnFactors, $conn)
 
 function renderDates($tableName, $conn, $selectId, $class)
 {
+  $currentDate = date("Y-m-d");
   $sql = "SELECT DISTINCT(DATE(time)) as distinctdate FROM " . $tableName . " ORDER BY distinctdate ASC";
   $result = $conn->query($sql);
   if ($conn->errno == 0 && $result->num_rows > 0)
@@ -46,8 +47,10 @@ function renderDates($tableName, $conn, $selectId, $class)
     echo '<select id="' . $selectId . '" class="' . $class . '" onchange="loadDataAndUpdateCharts()">';
     while($row = $result->fetch_assoc()) 
     {
-      $time = DateTime::createFromFormat("Y-m-d", $row["distinctdate"]);
-      echo '<option value="' . $time->format('Y-m-d') . '">' . $time->format('d.m.Y') . '</option>';
+      $date = DateTime::createFromFormat("Y-m-d", $row["distinctdate"]);
+      $dateValue = $date->format('Y-m-d');
+      $selected = ($dateValue == $currentDate) ? ' selected="selected"' : ''; 
+      echo '<option value="' . $dateValue . '"' . $selected . '>' . $date->format('d.m.Y') . '</option>';
     }
     echo "</select>";
   }
