@@ -21,20 +21,20 @@ include "include/query_functions.php";
         <label class="sr-only" for="dateSelector">Datum:</label>
 <?php
 $conn = getDatabaseConnection($dbServer, $dbUser, $dbPassword, $dbName);
-renderDates("wind", $conn, 'dateSelector', 'form-control mb-2 mr-sm-3');
+renderDates("wind", $conn, 'dateSelector', 'form-control wl-mobile-form-enlarge mb-2 mr-sm-3');
 $conn->close();
 ?>
         <label class="sr-only" for="timeFromSelector">Time from:</label>
 <?php
-renderTimes(0, 0, 'timeSelectorFrom', 'form-control mb-2');
+renderTimes(0, 0, 'timeSelectorFrom', 'form-control wl-mobile-form-enlarge mb-2');
 ?>
         <span class="mx-2">-</span>
         <label class="sr-only" for="dateSelector">Datum:</label>
 <?php
-renderTimes(1, 24, 'timeSelectorTo', 'form-control mb-2 mr-sm-3');
+renderTimes(1, 24, 'timeSelectorTo', 'form-control wl-mobile-form-enlarge mb-2 mr-sm-3');
 ?>
         <label class="sr-only" for="averageSelector" >Mittel über Punkte:</label>
-        <select class="form-control mb-2 mr-sm-3" id="averageSelector" onchange="loadDataAndUpdateCharts()">
+        <select class="form-control wl-mobile-form-enlarge mb-2 mr-sm-3" id="averageSelector" onchange="loadDataAndUpdateCharts()">
           <option value="1">Wind: Kein Mitteln</option>
           <option value="10">Wind: 10 Punkte mitteln</option>
           <option value="50" selected="selected">Wind: 50 Punkte mitteln</option>
@@ -102,8 +102,10 @@ function showChart(table, column, label, date, timeFrom, timeTo, average, canvas
 		data: {
 			datasets: [{
 				label: label,
-				backgroundColor: 'rgba(255, 99, 132, 0.2)',
-				borderColor: 'rgba(255, 99, 132, 0.2)',
+				borderColor: 'rgba(0, 20, 255, 0.2)',
+				backgroundColor: 'rgba(0, 20, 255, 0.2)',
+				borderWidth: mobile() ? 4 : 2,
+				pointRadius : mobile() ? 6 : 3,
 				fill: false
 			}]
 		},
@@ -121,20 +123,25 @@ function showChart(table, column, label, date, timeFrom, timeTo, average, canvas
 					display: true,
 					scaleLabel: {
 						display: true,
-						labelString: 'Uhrzeit'
+						labelString: 'Uhrzeit',
+						fontSize: mobile() ? 30 : 16
 					},
 					ticks: {
 						major: {
 							fontStyle: 'bold',
-							fontColor: '#FF0000'
-						}
+						},
+						fontSize: mobile() ? 30 : 16
 					}
 				}],
 				yAxes: [{
 					display: true,
 					scaleLabel: {
 						display: true,
-						labelString: label
+						labelString: label,
+						fontSize: mobile() ? 30 : 16
+					},
+					ticks: {
+						fontSize: mobile() ? 30 : 16
 					}
 				}]
 			}
@@ -145,6 +152,11 @@ function showChart(table, column, label, date, timeFrom, timeTo, average, canvas
 		var ctx = document.getElementById(canvasId).getContext('2d'); 
 		window[table + "_" + column] = new Chart(ctx, config);
 	})
+}
+
+function mobile()
+{
+	return /Mobi/.test(navigator.userAgent);
 }
 
 function loadDataAndUpdateCharts()
@@ -158,6 +170,15 @@ function loadDataAndUpdateCharts()
 }
 
 window.onload = function() {
+	if (mobile())
+	{
+		var elements = document.getElementsByClassName("wl-mobile-form-enlarge");
+		for (var i = 0; i < elements.length; i++)
+		{
+			var element = elements[i];
+			element.classList.add("form-control-lg");
+		}
+	}
 	showChart("wind", "speed", 'Windgeschwindigkeit [kt]', document.getElementById('dateSelector').value, document.getElementById('timeSelectorFrom').value, document.getElementById('timeSelectorTo').value, document.getElementById('averageSelector').value, 'windSpeedCanvas');
 	showChart("wind", "direction", 'Windrichtung [Grad]', document.getElementById('dateSelector').value, document.getElementById('timeSelectorFrom').value, document.getElementById('timeSelectorTo').value, document.getElementById('averageSelector').value, 'windDirectionCanvas');
 	showChart("temperature", "temperature", 'Temperatur [°C]', document.getElementById('dateSelector').value, document.getElementById('timeSelectorFrom').value, document.getElementById('timeSelectorTo').value, 1, 'temperatureCanvas');
