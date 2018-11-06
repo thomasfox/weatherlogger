@@ -65,7 +65,11 @@ function storeWhenThresholdIsReached($tablename, $valuesToStore, $storeIntervalS
 
 function getCallCount($selfMaxCalls)
 {
-  $callCount = $_GET["callCount"];
+  $callCount = null;
+  if (isset($_GET["callCount"]))
+  {
+    $callCount = $_GET["callCount"];
+  }
   echo "<br/>initial callCount: ".$callCount;
   if ($callCount != null)
   {
