@@ -65,7 +65,7 @@ function renderTimes($offset, $default, $selectId, $class)
   echo '<select id="' . $selectId . '" class="' . $class . '" onchange="loadDataAndUpdateCharts()">';
   for ($i = $offset; $i < 24 + $offset; $i++)
   {
-  	$selectedString = ($i == $default ? ' selected="selected"' : '');
+    $selectedString = ($i == $default ? ' selected="selected"' : '');
     echo '<option value="' .$i . ':00:00"' . $selectedString . '>' .$i . ':00</option>';
   }
   echo "</select>";
@@ -104,5 +104,59 @@ function columnDataAsJson($tableName, $columnName, $columnFactor, $columnOffset,
     echo "no result for " . $sql . "<br>";
   }
   echo "]";
+}
+
+function speedDirectionHistogram($conn)
+{
+  $sql = 'SELECT round(speed/10,0) as s, round(direction/10,0) as d, count(*) as c FROM wind group by s, d order by s, d asc;';
+  $sqlResult = $conn->query($sql);
+  $result = array();
+  if ($conn->errno == 0 && $sqlResult->num_rows > 0)
+  {
+    while ($row = $sqlResult->fetch_assoc()) 
+    {
+      $speed = $row['s'];
+      $direction = $row['d'] * 10;
+      $count = $row['c'];
+      if (!isset($result[$speed]))
+      {
+        $result[$speed] = array();
+      }
+      $result[$speed][$direction] = $count;
+    }
+  }
+  else
+  {
+    echo "no result for " . $sql . "<br>";
+  }
+  
+  // add 360 degrees bucket to zero degrees
+  foreach ($result as $speed => $directionArr)
+  {
+    if (isset($directionArr[360]))
+    {
+      if (!isset($directionArr[0]))
+      {
+        $directionArr[0] = $directionArr[360];
+      }
+      else
+      {
+        $directionArr[0] += $directionArr[360];
+      }
+      $directionArr[360] = 0;
+    }
+  }
+  // remove direction for zero speed
+  if (isset($result[0]))
+  {
+    $sumZero = 0;
+    foreach ($result[0] as $count)
+    {
+      $sumZero += $count;
+    }
+    $result[0]= array();
+    $result[0][0] = $sumZero;
+  }
+  return $result;
 }
 ?>
