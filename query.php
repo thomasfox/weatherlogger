@@ -67,8 +67,8 @@ renderTimes(1, 24, 'timeSelectorTo', 'form-control wl-mobile-form-enlarge mb-2 m
   <script>
 
 function loadChartData(table, column, config, date, timeFrom, timeTo, average, onReady) {
-	var clientId = '<?php include "include/config.php"; echo $basicAuthUser; ?>';
-	var clientSecret = '<?php include "include/config.php"; echo $basicAuthPassword; ?>';
+	var clientId = '<?php echo $basicAuthUser; ?>';
+	var clientSecret = '<?php echo $basicAuthPassword; ?>';
 
 	var authorizationBasic = window.btoa(clientId + ':' + clientSecret);
 
