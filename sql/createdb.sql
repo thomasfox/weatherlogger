@@ -29,3 +29,6 @@ CREATE TABLE `wind` (
  `gusts` smallint(6) DEFAULT NULL,
  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
+
+create index idx_wind_speed on wind(speed);
+create index idx_wind_direction  on wind (direction);
