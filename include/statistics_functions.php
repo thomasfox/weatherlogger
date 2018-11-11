@@ -191,6 +191,7 @@ function getDirectionNamesFor45DegreesStep()
   $directionNames[225] = 'SW';
   $directionNames[270] = 'W';
   $directionNames[315] = 'NW';
+  $directionNames[360] = 'N';
   return $directionNames;
 }
 
@@ -274,23 +275,18 @@ function getTotalPercentage(array $simpleHistogram)
   return $totalPercentage;
 }
 
-function drawLogColorscale(int $xOffset, int $yOffset)
+function drawLogColorscale()
 {
-  echo '<g fill="none" stroke-width="1">';
+  $xFactor = 1.5;
+  echo '<g fill="none" stroke-width="2">';
   for ($i = 0; $i <= 500; $i++)
   {
-    if ($i == 0 || $i == 500)
-    {
-      $color = '000000';
-    }
-    else
-    {
-      $color = logColorscale(pow(10, -$i/100));
-    }
-    echo '<line x1="' . ($xOffset + $i) . '" x2="' . ($xOffset + $i) .'" y1="' . $yOffset . '" y2="' . ($yOffset + 10) . '" stroke-width="1" stroke="#' . $color . '" />';
+    $color = logColorscale(pow(10, -$i/100));
+    echo '<line x1="' . ((10 + $i) * $xFactor) . '" x2="' . ((10 + $i) * $xFactor) . '" y1="0" y2="20" stroke="#' . $color . '" />';
     if ($i % 100 == 0)
     {
-      echo '<text x="'. ($xOffset - 2 + $i) . '" y="25" fill="black" font-size="5">' . pow(10, -$i/100) . '</text>';
+      echo '<line x1="' . ((10 + $i) * $xFactor) . '" x2="' . ((10 + $i) * $xFactor) .'" y1="20" y2="28" stroke="black" />';
+      echo '<text x="'. ((7 + $i) * $xFactor * 0.99) . '" y="42" fill="black" font-size="12" stroke-width="1">' . pow(10, -$i/100) . '</text>';
     }
   }
   echo '</g>';
@@ -397,11 +393,13 @@ function maxPercentage(array $speedDirectionHistogram)
   return $maxPercentage;
 }
 
-function drawRadialWindDirectionDistribution(array $speedDirectionHistogram, float $speedStep, int $xOffset, int $yOffset)
+function drawRadialWindDirectionDistribution(array $speedDirectionHistogram, float $speedStep)
 {
+  $xOffset = 400;
+  $yOffset = 400;
   $maxPercentage = maxPercentage($speedDirectionHistogram);
   
-  echo '<g fill="none" stroke-width="' . ($speedStep * 10) . '">';
+  echo '<g fill="none" stroke-width="' . ($speedStep * 20) . '">';
   foreach ($speedDirectionHistogram as $speedBucket => $directionHistogram)
   {
     foreach ($directionHistogram as $direction => $percentage)
@@ -412,14 +410,62 @@ function drawRadialWindDirectionDistribution(array $speedDirectionHistogram, flo
   echo '</g>';
 }
 
-
 function drawArcLine(int $speedBucket, float $speedStep, int $direction, float $percentage, float $percentageScale, int $xOffset, int $yOffset)
 {
-	$xStart  =   $speedBucket * $speedStep * 10 * sin(($direction - 5.5)/180*M_PI);
-	$yStart  =  -$speedBucket * $speedStep * 10 * cos(($direction - 5.5)/180*M_PI);
-	$xEndRel = ( $speedBucket * $speedStep * 10 * sin(($direction + 5.5)/180*M_PI)) - $xStart;
-	$yEndRel = (-$speedBucket * $speedStep * 10 * cos(($direction + 5.5)/180*M_PI)) - $yStart;
-	echo '<path d="m' . ($xOffset + $xStart) . ',' . ($yOffset + $yStart) .' a100,100 0 0,1 ' . $xEndRel . ',' . $yEndRel . '" stroke="#' . logColorscale($percentage / $percentageScale) . '" />';
+  $xStart  =   $speedBucket * $speedStep * 20 * sin(($direction - 5.5)/180*M_PI);
+  $yStart  =  -$speedBucket * $speedStep * 20 * cos(($direction - 5.5)/180*M_PI);
+  $xEndRel = ( $speedBucket * $speedStep * 20 * sin(($direction + 5.5)/180*M_PI)) - $xStart;
+  $yEndRel = (-$speedBucket * $speedStep * 20 * cos(($direction + 5.5)/180*M_PI)) - $yStart;
+  echo '<path d="m' . ($xOffset + $xStart) . ',' . ($yOffset + $yStart) .' a100,100 0 0,1 ' . $xEndRel . ',' . $yEndRel . '" stroke="#' . logColorscale($percentage / $percentageScale) . '" />';
+}
+
+function drawLinearWindDirectionDistribution(array $speedDirectionHistogram, float $speedStep, $speedCutoff, int $directionStep)
+{
+  $maxPercentage = maxPercentage($speedDirectionHistogram);
+
+  echo '<g fill="none" stroke-width="' . ($speedStep * 20) . '">';
+  foreach ($speedDirectionHistogram as $speedBucket => $directionHistogram)
+  {
+    foreach ($directionHistogram as $direction => $percentage)
+    {
+      drawLinearDistributionLine($speedBucket, $speedStep, $speedCutoff, $direction, $directionStep, $percentage, $maxPercentage);
+    }
+  }
+  echo '</g>';
+  $directionArray = getDirectionsArray(45);
+  $directionArray[] = 360;
+  $directionNames = getDirectionNamesFor45DegreesStep();
+  foreach ($directionArray as $direction)
+  {
+    $x = getLinearDistributionDirectionX($direction) + $directionStep;
+    $y = getLinearDistributionDirectionY(0, 1, $speedCutoff);
+    echo '<line x1="' . $x . '" y1="'. $y . '" x2="' . $x . '" y2="'. ($y + 8) . '" stroke-width="1" stroke="black" />';
+    echo '<text x="'. ($x - 15) . '" y="'. ($y + 20) . '" fill="black" font-size="12">' . $direction . '° (' . $directionNames[$direction] . ')</text>';
+  }
+  for ($speed = 0; $speed <= $speedCutoff; $speed += 5) 
+  {
+    $y = getLinearDistributionDirectionY($speed, 1, $speedCutoff) + ($speedStep * 10);
+    echo '<line x1="29" y1="' . $y . '" x2="35" y2="' . $y . '" stroke-width="1" stroke="black" />';
+    echo '<text x="0" y="' . ($y + 3) . '" fill="black" font-size="12">' . $speed . ' kt</text>';
+  	}
+}
+
+function drawLinearDistributionLine(int $speedBucket, float $speedStep, $speedCutoff, int $direction, int $directionStep, float $percentage, float $percentageScale)
+{
+  $xStart = getLinearDistributionDirectionX($direction);
+  $y = getLinearDistributionDirectionY($speedBucket, $speedStep, $speedCutoff);
+  $xEndRel = $directionStep * 2;
+  echo '<line x1="' . $xStart . '" y1="' . $y .'" x2="' . ($xStart + $xEndRel) . '" y2="' . $y . '" stroke="#' . logColorscale($percentage / $percentageScale) . '" />';
+}
+
+function getLinearDistributionDirectionX(int $direction)
+{
+  return 35 + $direction * 2;
+}
+
+function getLinearDistributionDirectionY(int $speedBucket, float $speedStep, float $speedCutoff)
+{
+  return ($speedCutoff * 20) + 10 - $speedBucket * $speedStep * 20;
 }
 
 // not to be used, too slow
