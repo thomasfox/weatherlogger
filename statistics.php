@@ -21,7 +21,7 @@ $speedDirectionHistogram = speedDirectionHistogram($speedBucketSize, $directionB
 $conn->close();
 $speedDirectionHistogram = setMissingDirectionBuckets($speedDirectionHistogram, $directionBucketSize);
 
-printSpeedDirectionTable($speedDirectionHistogram, 20);
+printSpeedDirectionTable($speedDirectionHistogram, $speedBucketSize, 20);
 ?>
       </div>
       <div class="col-sm">
