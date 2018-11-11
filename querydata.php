@@ -12,25 +12,17 @@ if($timeFrom == null)
 {
   $timeFrom = "00:00:00";
 }
-else
-{
-  $date = DateTime::createFromFormat("Y-m-d", $date);
-}
 
 $timeTo = $_GET["timeTo"];
 if($timeTo == null)
 {
   $timeTo = "24:00:00";
 }
-else
-{
-  $date = DateTime::createFromFormat("Y-m-d", $date);
-}
 
 $date = $_GET["date"];
 if($date == null)
 {
-	$date = new DateTime().format("Y-m-d");
+  $date = new DateTime().format("Y-m-d");
 }
 $dateFrom = DateTime::createFromFormat("Y-m-d H:i:s", $date . ' ' . $timeFrom);
 $dateTo = DateTime::createFromFormat("Y-m-d H:i:s", $date . ' ' . $timeTo);
