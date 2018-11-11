@@ -212,7 +212,7 @@ function printSpeedDirectionTable(array $speedDirectionHistogram, $largestSpeed)
 function printDirectionHeadlineForSpeedDirectionTable(array $speedDirectionHistogram)
 {
   $directionNames = getDirectionNamesFor45DegreesStep();
-  echo '<thead class="thead-light">'
+  echo '<thead class="table-primary">'
       . '<tr><th scope="col">Windgeschwindigkeit w [kt]</th><th scope="col">alle Richtungen</th>';
   foreach ($speedDirectionHistogram[0] as $direction => $dummy)
   {
@@ -232,7 +232,7 @@ function printDirectionHeadlineForSpeedDirectionTable(array $speedDirectionHisto
 function printAllSpeedDirectionLineForSpeedDirectionTable(array $speedDirectionHistogram)
 {
   $directionHistogram = getDirectionHistogram($speedDirectionHistogram);
-  echo '<tr><th scope="row">alle</th><td class="table-secondary">100</td>';
+  echo '<tr><th scope="row" class="table-primary">alle</th><td class="table-secondary">100</td>';
   foreach ($directionHistogram as $direction => $percentage)
   {
     echo '<td class="table-secondary">' . round($percentage, 2) . '</td>';
@@ -244,7 +244,7 @@ function printSpeedDirectionLinesForSpeedDirectionTable(array $speedDirectionHis
 {
   foreach (truncateWindSpeed($speedDirectionHistogram, $speedCutoff) as $speed => $directionHistogram)
   {
-    echo '<tr><th scope="row">' . $speed . ' &lt;= w &lt; ' . ($speed + 1) . '</th>';
+    echo '<tr><th scope="row" class="table-primary">' . $speed . ' &lt;= w &lt; ' . ($speed + 1) . '</th>';
     $totalPercentage = getTotalPercentage($directionHistogram);
     echo '<td class="table-secondary">' . round($totalPercentage,2) . '</td>';
     foreach ($directionHistogram as $direction => $percentage)
@@ -258,7 +258,7 @@ function printSpeedDirectionLinesForSpeedDirectionTable(array $speedDirectionHis
 function printTruncatedSpeedLineForSpeedDirectionTable(array $speedDirectionHistogram, float $speedCutoff)
 {
   $directionHistogram = sumTruncatedWindSpeeds($speedDirectionHistogram, $speedCutoff);
-  echo '<tr><th scope="row">w &gt;=' . $speedCutoff . '</th>';
+  echo '<tr><th scope="row" class="table-primary">w &gt;=' . $speedCutoff . '</th>';
     $totalPercentage = getTotalPercentage($directionHistogram);
     echo '<td class="table-secondary">' . round($totalPercentage,2) . '</td>';
   foreach ($directionHistogram as $direction => $percentage)

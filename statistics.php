@@ -8,7 +8,9 @@
 </head>
 <body>
   <h2>Statistik über alle Messpunkte</h2>
-  <div>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm">
  <?php
 include "include/config.php";
 include "include/statistics_functions.php";
@@ -21,6 +23,10 @@ $speedDirectionHistogram = setMissingDirectionBuckets($speedDirectionHistogram, 
 
 printSpeedDirectionTable($speedDirectionHistogram, 20);
 ?>
+      </div>
+      <div class="col-sm">
+      </div>
+    </div>
   </div>
 </body>
 </html>
