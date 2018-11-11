@@ -7,16 +7,18 @@
 <link rel="stylesheet" href="css/weatherlogger.css" />
 </head>
 <body>
-  <h2>Statistik über alle Messpunkte</h2>
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-sm">
-      <h4>Relative Häufigkeiten nach Windrichtung und Windstärke, tabellarisch</h4>
- <?php
+<?php
 include "include/config.php";
 include "include/statistics_functions.php";
 $conn = getDatabaseConnection($dbServer, $dbUser, $dbPassword, $dbName);
-$speedBucketSize=1;
+?>
+  <div class="container-fluid">
+    <h2 class="text-center">Statistik über alle Messpunkte (<?php echo getDateRange($conn); ?>)</h2>
+    <div class="row mt-4">
+      <div class="col-sm">
+      <h4>Relative Häufigkeiten nach Windrichtung und Windstärke, tabellarisch</h4>
+<?php
+$speedBucketSize=1.0;
 $directionBucketSize=45;
 $speedDirectionHistogram = speedDirectionHistogram($speedBucketSize, $directionBucketSize, $conn);
 $speedDirectionHistogram = setMissingDirectionBuckets($speedDirectionHistogram, $directionBucketSize);

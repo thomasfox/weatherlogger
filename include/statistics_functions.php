@@ -19,7 +19,7 @@ function getDatabaseConnection($dbServer, $dbUser, $dbPassword, $dbName)
  * 
  * @return array
  */
-function speedDirectionHistogram(float $speedStep, int $directionStep, $conn)
+function speedDirectionHistogram($speedStep, $directionStep, $conn)
 {
   $dbSpeedStep = $speedStep * 10;
   $sql = 'SELECT floor(speed/'. $dbSpeedStep. ') as s, floor((direction + ' . ($directionStep/2) . ')/' . $directionStep. ') as d, count(*) as c FROM wind group by s, d order by s, d asc;';
@@ -81,7 +81,7 @@ function speedDirectionHistogram(float $speedStep, int $directionStep, $conn)
  * 
  * @return the filled speedDirectionHistogram.
  */
-function setMissingDirectionBuckets(array $speedDirectionHistogram, int $directionStep)
+function setMissingDirectionBuckets($speedDirectionHistogram, $directionStep)
 {
   foreach ($speedDirectionHistogram as $speedbucket => $directionHistogramForSpeed)
   {
@@ -96,7 +96,7 @@ function setMissingDirectionBuckets(array $speedDirectionHistogram, int $directi
   return $speedDirectionHistogram;
 }
 
-function truncateWindSpeed(array $speedDirectionHistogram, float $speedBucketSize, float $speedCutoff)
+function truncateWindSpeed($speedDirectionHistogram, $speedBucketSize, $speedCutoff)
 {
   $result = array();
   foreach ($speedDirectionHistogram as $speedbucket => $directionHistogramForSpeed)
@@ -109,7 +109,7 @@ function truncateWindSpeed(array $speedDirectionHistogram, float $speedBucketSiz
   return $result;
 }
 
-function sumTruncatedWindSpeeds(array $speedDirectionHistogram, float $speedBucketSize, float $speedCutoff)
+function sumTruncatedWindSpeeds($speedDirectionHistogram, $speedBucketSize, $speedCutoff)
 {
   $result = array();
   foreach ($speedDirectionHistogram as $speedbucket => $directionHistogramForSpeed)
@@ -146,7 +146,7 @@ function sumTruncatedWindSpeeds(array $speedDirectionHistogram, float $speedBuck
  * 
  * @return the filled speedDirectionHistogram.
  */
-function getDirectionHistogram(array $speedDirectionHistogram)
+function getDirectionHistogram($speedDirectionHistogram)
 {
   $result = array();
   foreach ($speedDirectionHistogram as $directionHistogramForSpeed)
@@ -170,7 +170,7 @@ function getDirectionHistogram(array $speedDirectionHistogram)
  * 
  * @return int[] an array containing the directions. 
  */
-function getDirectionsArray(int $directionsStep)
+function getDirectionsArray($directionsStep)
 {
   $result = array();
   for ($direction = 0; $direction < 360; $direction+= $directionsStep)
@@ -195,7 +195,7 @@ function getDirectionNamesFor45DegreesStep()
   return $directionNames;
 }
 
-function printSpeedDirectionTable(array $speedDirectionHistogram, float $speedBucketSize, float $largestSpeed)
+function printSpeedDirectionTable($speedDirectionHistogram, $speedBucketSize, $largestSpeed)
 {
   echo '<table class="table table-sm table-bordered">';
   printDirectionHeadlineForSpeedDirectionTable($speedDirectionHistogram);
@@ -206,7 +206,7 @@ function printSpeedDirectionTable(array $speedDirectionHistogram, float $speedBu
   echo '</tbody></table>';
 }
 
-function printDirectionHeadlineForSpeedDirectionTable(array $speedDirectionHistogram)
+function printDirectionHeadlineForSpeedDirectionTable($speedDirectionHistogram)
 {
   $directionNames = getDirectionNamesFor45DegreesStep();
   echo '<thead class="table-primary">'
@@ -226,7 +226,7 @@ function printDirectionHeadlineForSpeedDirectionTable(array $speedDirectionHisto
   echo '</tr></thead>';
 }
 
-function printAllSpeedDirectionLineForSpeedDirectionTable(array $speedDirectionHistogram)
+function printAllSpeedDirectionLineForSpeedDirectionTable($speedDirectionHistogram)
 {
   $directionHistogram = getDirectionHistogram($speedDirectionHistogram);
   echo '<tr><th scope="row" class="table-primary">alle</th><td class="table-secondary">100</td>';
@@ -237,7 +237,7 @@ function printAllSpeedDirectionLineForSpeedDirectionTable(array $speedDirectionH
   echo '</tr>';
 }
 
-function printSpeedDirectionLinesForSpeedDirectionTable(array $speedDirectionHistogram, float $speedBucketSize, float $speedCutoff)
+function printSpeedDirectionLinesForSpeedDirectionTable($speedDirectionHistogram, $speedBucketSize, $speedCutoff)
 {
   foreach (truncateWindSpeed($speedDirectionHistogram, $speedBucketSize, $speedCutoff) as $speedbucket => $directionHistogram)
   {
@@ -252,7 +252,7 @@ function printSpeedDirectionLinesForSpeedDirectionTable(array $speedDirectionHis
   }
 }
 
-function printTruncatedSpeedLineForSpeedDirectionTable(array $speedDirectionHistogram, float $speedBucketSize, float $speedCutoff)
+function printTruncatedSpeedLineForSpeedDirectionTable($speedDirectionHistogram, $speedBucketSize, $speedCutoff)
 {
   $directionHistogram = sumTruncatedWindSpeeds($speedDirectionHistogram, $speedBucketSize, $speedCutoff);
   echo '<tr><th scope="row" class="table-primary">w &gt;=' . $speedCutoff . '</th>';
@@ -265,7 +265,7 @@ function printTruncatedSpeedLineForSpeedDirectionTable(array $speedDirectionHist
   echo '</tr>';
 }
 
-function getTotalPercentage(array $simpleHistogram)
+function getTotalPercentage($simpleHistogram)
 {
   $totalPercentage = 0;
   foreach ($simpleHistogram as $percentage)
@@ -292,7 +292,7 @@ function drawLogColorscale()
   echo '</g>';
 }
 
-function drawLinearColorscale(int $xOffset, int $yOffset)
+function drawLinearColorscale($xOffset, $yOffset)
 {
   echo '<g fill="none" stroke-width="1">';
   for ($i = 0; $i <= 500; $i++)
@@ -333,7 +333,7 @@ function logColorscale($i)
  * @param float $value the value to get the color for.
  * @return 6-char hex color code.
  */
-function linearColorscale(float $value)
+function linearColorscale($value)
 {
   if ($value < 0.2)
   {
@@ -377,7 +377,7 @@ function toColorHex($i)
   return str_pad(dechex((int) $i),2,'0',STR_PAD_LEFT);
 }
 
-function maxPercentage(array $speedDirectionHistogram)
+function maxPercentage($speedDirectionHistogram)
 {
   $maxPercentage = 0;
   foreach ($speedDirectionHistogram as $speed => $directionHistogram)
@@ -393,7 +393,7 @@ function maxPercentage(array $speedDirectionHistogram)
   return $maxPercentage;
 }
 
-function drawRadialWindDirectionDistribution(array $speedDirectionHistogram, float $speedStep)
+function drawRadialWindDirectionDistribution($speedDirectionHistogram, $speedStep)
 {
   $xOffset = 400;
   $yOffset = 400;
@@ -410,7 +410,7 @@ function drawRadialWindDirectionDistribution(array $speedDirectionHistogram, flo
   echo '</g>';
 }
 
-function drawArcLine(int $speedBucket, float $speedStep, int $direction, float $percentage, float $percentageScale, int $xOffset, int $yOffset)
+function drawArcLine($speedBucket, $speedStep, $direction, $percentage, $percentageScale, $xOffset, $yOffset)
 {
   $xStart  =   $speedBucket * $speedStep * 20 * sin(($direction - 5.5)/180*M_PI);
   $yStart  =  -$speedBucket * $speedStep * 20 * cos(($direction - 5.5)/180*M_PI);
@@ -419,7 +419,7 @@ function drawArcLine(int $speedBucket, float $speedStep, int $direction, float $
   echo '<path d="m' . ($xOffset + $xStart) . ',' . ($yOffset + $yStart) .' a100,100 0 0,1 ' . $xEndRel . ',' . $yEndRel . '" stroke="#' . logColorscale($percentage / $percentageScale) . '" />';
 }
 
-function drawLinearWindDirectionDistribution(array $speedDirectionHistogram, float $speedStep, $speedCutoff, int $directionStep)
+function drawLinearWindDirectionDistribution($speedDirectionHistogram, $speedStep, $speedCutoff, $directionStep)
 {
   $maxPercentage = maxPercentage($speedDirectionHistogram);
 
@@ -450,7 +450,7 @@ function drawLinearWindDirectionDistribution(array $speedDirectionHistogram, flo
   	}
 }
 
-function drawLinearDistributionLine(int $speedBucket, float $speedStep, $speedCutoff, int $direction, int $directionStep, float $percentage, float $percentageScale)
+function drawLinearDistributionLine($speedBucket, $speedStep, $speedCutoff, $direction, $directionStep, $percentage, $percentageScale)
 {
   $xStart = getLinearDistributionDirectionX($direction);
   $y = getLinearDistributionDirectionY($speedBucket, $speedStep, $speedCutoff);
@@ -458,14 +458,30 @@ function drawLinearDistributionLine(int $speedBucket, float $speedStep, $speedCu
   echo '<line x1="' . $xStart . '" y1="' . $y .'" x2="' . ($xStart + $xEndRel) . '" y2="' . $y . '" stroke="#' . logColorscale($percentage / $percentageScale) . '" />';
 }
 
-function getLinearDistributionDirectionX(int $direction)
+function getLinearDistributionDirectionX($direction)
 {
   return 35 + $direction * 2;
 }
 
-function getLinearDistributionDirectionY(int $speedBucket, float $speedStep, float $speedCutoff)
+function getLinearDistributionDirectionY($speedBucket, $speedStep, $speedCutoff)
 {
   return ($speedCutoff * 20) + 10 - $speedBucket * $speedStep * 20;
+}
+
+function getDateRange($conn)
+{
+  $sql = 'select DATE(min(time)) as mindate, DATE(max(time)) as maxdate from wind';
+  $sqlResult = $conn->query($sql);
+  if ($conn->errno == 0 && $sqlResult->num_rows > 0)
+  {
+    $row = $sqlResult->fetch_assoc();
+    return toHumanReadableDate($row["mindate"]) . ' - ' . toHumanReadableDate($row["maxdate"]);
+  }
+}
+
+function toHumanReadableDate($dbDate)
+{
+  return DateTime::createFromFormat("Y-m-d", $dbDate)->format('d.m.Y');
 }
 
 // not to be used, too slow
