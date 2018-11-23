@@ -13,6 +13,13 @@ $rawdata = file_get_contents($clientrawUrl);
 $data = explode(" ", $rawdata);
 //echo $data . '<br/>';
 
+$hour = (int) $data[29];
+$minute = (int) $data[20];
+$seconds = (int) $data[31];
+$day = (int) $data[35];
+$month = (int) $data[36];
+
+echo 'weatherstation timestamp is ' . $day . '.' . $month . ' ' . $hour . ':' . $minute . ':' .$seconds . '<br/>';
 $windspeed = (float) $data[1];
 $windspeedRecorded = (int) ($windspeed * 10);
 $windspeedGusts = (float) $data[2];
@@ -64,13 +71,6 @@ storeWhenThresholdIsReached("rain", $rainData, $rainStoreIntervalSeconds, $datab
 
 
 $conn->close();
-
-$callCount = getCallCount($selfMaxCalls);
-usleep($sleepTimeMicros);
-if ($callCount > 0)
-{
-  callSelf($selfUrl, $basicAuthUser, $basicAuthPassword, $callCount);
-}
 ?>
 </body>
 </html>

@@ -63,33 +63,9 @@ function storeWhenThresholdIsReached($tablename, $valuesToStore, $storeIntervalS
   }
 }
 
-function getCallCount($selfMaxCalls)
+function call($url, $user, $password)
 {
-  $callCount = null;
-  if (isset($_GET["callCount"]))
-  {
-    $callCount = $_GET["callCount"];
-  }
-  echo "<br/>initial callCount: ".$callCount;
-  if ($callCount != null)
-  {
-    $callCount += 1;
-    if ($callCount > $selfMaxCalls)
-    {
-      $callCount = -1;
-    }
-  }
-  else
-  {
-    $callCount = 1;
-  }
-  echo "<br/>returned callCount: ".$callCount;
-  return $callCount;
-}
-
-function callSelf($url, $user, $password, $callCount)
-{
-  echo("<br/>callSelf: " . $url);
+  echo("<br/>call: " . $url);
   if ($url == null)
   {
     return;
@@ -97,12 +73,12 @@ function callSelf($url, $user, $password, $callCount)
   $opts = array(
     'http'=>array(
       'method'=>"GET",
-	  'timeout'=>1,
+      'timeout'=>3.0,
       'header'=>"Authorization: Basic ". base64_encode($user . ":" . $password) . "\r\n"));
 
   $context = stream_context_create($opts);
 
-  $file = file_get_contents($url . "?callCount=" . $callCount, false, $context);
+  $file = file_get_contents($url, false, $context);
   echo $file;
 }
 ?>
