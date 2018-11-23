@@ -31,4 +31,5 @@ CREATE TABLE `wind` (
 ) ENGINE=InnoDB;
 
 create index idx_wind_speed on wind(speed);
-create index idx_wind_direction  on wind (direction);
+create index idx_wind_direction on wind (direction);
+create index idx_wind_time on wind (`time`);
