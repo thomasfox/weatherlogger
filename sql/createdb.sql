@@ -30,6 +30,18 @@ CREATE TABLE `wind` (
  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 
+CREATE TABLE `time` (
+ `id` int(11) NOT NULL AUTO_INCREMENT,
+ `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ `second` tinyint DEFAULT NULL,
+ `minute` tinyint DEFAULT NULL,
+ `hour` tinyint DEFAULT NULL,
+ `day` tinyint DEFAULT NULL,
+ `month` tinyint DEFAULT NULL,
+ PRIMARY KEY (`id`)
+) ENGINE=InnoDB;
+
+
 create index idx_wind_speed on wind(speed);
 create index idx_wind_direction on wind (direction);
 create index idx_wind_time on wind (`time`);

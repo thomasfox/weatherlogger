@@ -15,11 +15,11 @@ $data = explode(" ", $rawdata);
 
 $hour = (int) $data[29];
 $minute = (int) $data[20];
-$seconds = (int) $data[31];
+$second = (int) $data[31];
 $day = (int) $data[35];
 $month = (int) $data[36];
+// echo 'weatherstation timestamp is ' . $day . '.' . $month . ' ' . $hour . ':' . $minute . ':' .$seconds . '<br/>';
 
-echo 'weatherstation timestamp is ' . $day . '.' . $month . ' ' . $hour . ':' . $minute . ':' .$seconds . '<br/>';
 $windspeed = (float) $data[1];
 $windspeedRecorded = (int) ($windspeed * 10);
 $windspeedGusts = (float) $data[2];
@@ -68,6 +68,20 @@ $rainData = array(
 	"rate"  => $rainRateRecorded,
 	"yearly"  => $yearlyRainRecorded);
 storeWhenThresholdIsReached("rain", $rainData, $rainStoreIntervalSeconds, $databaseTime, $conn);
+
+$timeData = array(
+	"hour"  => $hour,
+	"minute"  => $minute,
+	"second"  => $second,
+	"day"  => $day,
+	"month"  => $month);
+storeWhenThresholdIsReached("time", $timeData, $timeStoreIntervalSeconds, $databaseTime, $conn);
+
+$hour = (int) $data[29];
+$minute = (int) $data[20];
+$second = (int) $data[31];
+$day = (int) $data[35];
+$month = (int) $data[36];
 
 
 $conn->close();
