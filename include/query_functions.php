@@ -37,40 +37,6 @@ function displayData($tableName, $columnFactors, $conn)
   }
 }
 
-function renderDates($tableName, $conn, $selectId, $class)
-{
-  $currentDate = date("Y-m-d");
-  $sql = "SELECT DISTINCT(DATE(time)) as distinctdate FROM " . $tableName . " ORDER BY distinctdate ASC";
-  $result = $conn->query($sql);
-  if ($conn->errno == 0 && $result->num_rows > 0)
-  {
-    echo '<select id="' . $selectId . '" class="' . $class . '" onchange="loadDataAndUpdateCharts()">';
-    while($row = $result->fetch_assoc()) 
-    {
-      $date = DateTime::createFromFormat("Y-m-d", $row["distinctdate"]);
-      $dateValue = $date->format('Y-m-d');
-      $selected = ($dateValue == $currentDate) ? ' selected="selected"' : ''; 
-      echo '<option value="' . $dateValue . '"' . $selected . '>' . $date->format('d.m.Y') . '</option>';
-    }
-    echo "</select>";
-  }
-  else
-  {
-    echo "no result for " . $sql . "<br>";
-  }
-}
-
-function renderTimes($offset, $default, $selectId, $class)
-{
-  echo '<select id="' . $selectId . '" class="' . $class . '" onchange="loadDataAndUpdateCharts()">';
-  for ($i = $offset; $i < 24 + $offset; $i++)
-  {
-    $selectedString = ($i == $default ? ' selected="selected"' : '');
-    echo '<option value="' .$i . ':00:00"' . $selectedString . '>' .$i . ':00</option>';
-  }
-  echo "</select>";
-}
-
 function columnDataAsJson($tableName, $columnName, $columnFactor, $columnOffset, $dateFrom, $dateTo, $conn, $averageOver=1)
 {
   $sql = "SELECT " . $columnName . ", time FROM " . $tableName . " WHERE time > '" . $dateFrom->format('Y-m-d H:i:s') . "' AND time <= '" . $dateTo->format('Y-m-d H:i:s') . "' ORDER BY time ASC";

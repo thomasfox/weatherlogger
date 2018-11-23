@@ -9,6 +9,7 @@
 <?php
 include "include/config.php";
 include "include/query_functions.php";
+include "include/date_functions.php";
 ?>
 <body>
   <script src="js/moment.min.js"></script>
@@ -21,7 +22,8 @@ include "include/query_functions.php";
         <label class="sr-only" for="dateSelector">Datum:</label>
 <?php
 $conn = getDatabaseConnection($dbServer, $dbUser, $dbPassword, $dbName);
-renderDates("wind", $conn, 'dateSelector', 'form-control wl-mobile-form-enlarge mb-2 mr-sm-3');
+$currentDate = date("Y-m-d");
+renderDates("wind", $conn, $currentDate, 'dateSelector', 'form-control wl-mobile-form-enlarge mb-2 mr-sm-3');
 $conn->close();
 ?>
         <label class="sr-only" for="timeFromSelector">Time from:</label>
@@ -159,7 +161,7 @@ function mobile()
 	return /Mobi/.test(navigator.userAgent);
 }
 
-function loadDataAndUpdateCharts()
+function loadDataAndUpdate()
 {
 	loadChartData("wind", "speed", window.wind_speed.config, document.getElementById('dateSelector').value, document.getElementById('timeSelectorFrom').value, document.getElementById('timeSelectorTo').value, document.getElementById('averageSelector').value, function() {window.wind_speed.update();})
 	loadChartData("wind", "direction", window.wind_direction.config, document.getElementById('dateSelector').value, document.getElementById('timeSelectorFrom').value, document.getElementById('timeSelectorTo').value, document.getElementById('averageSelector').value, function() {window.wind_direction.update();})

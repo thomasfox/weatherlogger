@@ -1,4 +1,6 @@
 <?php
+include "date_functions.php";
+
 function getDatabaseConnection($dbServer, $dbUser, $dbPassword, $dbName)
 {
   $conn = new mysqli($dbServer, $dbUser, $dbPassword, $dbName);
@@ -19,10 +21,10 @@ function getDatabaseConnection($dbServer, $dbUser, $dbPassword, $dbName)
  * 
  * @return array
  */
-function speedDirectionHistogram($speedStep, $directionStep, $conn)
+function speedDirectionHistogram($speedStep, $directionStep, $from, $to, $conn)
 {
   $dbSpeedStep = $speedStep * 10;
-  $sql = 'SELECT floor(speed/'. $dbSpeedStep. ') as s, floor((direction + ' . ($directionStep/2) . ')/' . $directionStep. ') as d, count(*) as c FROM wind group by s, d order by s, d asc;';
+  $sql = 'SELECT floor(speed/'. $dbSpeedStep. ') as s, floor((direction + ' . ($directionStep/2) . ')/' . $directionStep. ') as d, count(*) as c FROM wind WHERE time > "'. $from . '" AND time < "' . $to . '" group by s, d order by s, d asc;';
   $sqlResult = $conn->query($sql);
   $dbResult = array();
   $totalCount = 0;
@@ -521,5 +523,39 @@ function countInDb($sql, $conn)
   }
   $sqlResult.close();
   return null;
+}
+
+function getAndRenderFromTo($conn)
+{
+	if (isset($_GET['dateSelectorFrom']) && isset($_GET['timeSelectorFrom']))
+	{
+		$fromDate = $_GET['dateSelectorFrom'];
+		$fromTime = $_GET['timeSelectorFrom'];
+		$from = $fromDate . ' ' . $fromTime;
+	}
+	else
+	{
+		$from = getMinDate("wind", $conn)->format('Y-m-d H:i:s');
+		$fromDate = $arr = explode(" ", $from, 2)[0];
+		$fromTime = 0;
+	}
+	
+	if (isset($_GET['dateSelectorTo']) && isset($_GET['timeSelectorTo']))
+	{
+		$toDate = $_GET['dateSelectorTo'];
+		$toTime = $_GET['timeSelectorTo'];
+		$to = $toDate . ' ' . $toTime;
+	}
+	else
+	{
+		$to = getMaxDate("wind", $conn)->format('Y-m-d H:i:s');
+		$toDate = $arr = explode(" ", $to, 2)[0];
+		$toTime = 24;
+	}
+	renderDates("wind", $conn, $fromDate, 'dateSelectorFrom', 'form-control wl-mobile-form-enlarge mb-2 mr-sm-3');
+	renderTimes(0, $fromTime, 'timeSelectorFrom', 'form-control wl-mobile-form-enlarge mb-2');
+	renderDates("wind", $conn, $toDate, 'dateSelectorTo', 'form-control wl-mobile-form-enlarge mb-2 mr-sm-3');
+	renderTimes(1, $toTime, 'timeSelectorTo', 'form-control wl-mobile-form-enlarge mb-2 mr-sm-3');
+	return array($from, $to);
 }
 ?>

@@ -7,6 +7,7 @@
 <?php
 include "include/config.php";
 include "include/functions.php";
+include "include/date_functions.php";
 
 $rawdata = file_get_contents($clientrawUrl);
 //echo $rawdata . '<br/>';
