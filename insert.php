@@ -1,4 +1,3 @@
-#!/usr/bin/env php
 <html>
 <head>
 <title>insert weather data</title>
