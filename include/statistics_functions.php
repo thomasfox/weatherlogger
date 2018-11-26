@@ -552,8 +552,10 @@ function getAndRenderFromTo($conn)
 		$toDate = $arr = explode(" ", $to, 2)[0];
 		$toTime = 24;
 	}
+	echo '<label class="my-1 mx-2" for="dateSelectorFrom">Von</label>';
 	renderDates("wind", $conn, $fromDate, 'dateSelectorFrom', 'form-control wl-mobile-form-enlarge mb-2 mr-sm-3');
 	renderTimes(0, $fromTime, 'timeSelectorFrom', 'form-control wl-mobile-form-enlarge mb-2');
+	echo '<label class="my-1 mx-2" for="dateSelectorTo">Bis</label>';
 	renderDates("wind", $conn, $toDate, 'dateSelectorTo', 'form-control wl-mobile-form-enlarge mb-2 mr-sm-3');
 	renderTimes(1, $toTime, 'timeSelectorTo', 'form-control wl-mobile-form-enlarge mb-2 mr-sm-3');
 	return array($from, $to);
