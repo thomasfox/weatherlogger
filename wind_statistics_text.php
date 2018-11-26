@@ -14,6 +14,7 @@ $conn = getDatabaseConnection($dbServer, $dbUser, $dbPassword, $dbName);
 ?>
   <div class="container-fluid">
     <h2 class="text-center">Relative Häufigkeiten nach Windrichtung und Windstärke, tabellarisch</h2>
+<?php include "include/menu.php" ?>
     <div class="row justify-content-center my-3">
       <form class="form-inline" id="dateSelectForm">
         <label class="sr-only" for="dateSelector">Datum:</label>

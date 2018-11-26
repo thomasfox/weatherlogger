@@ -16,7 +16,8 @@ include "include/date_functions.php";
   <script src="js/Chart.min.js"></script>
   
   <div class="container-fluid">
-    <h1 class="text-center">Wind und Wetter - SVS Wetterstation</h1>
+    <h2 class="text-center">Wind und Wetter - SVS Wetterstation</h2>
+<?php include "include/menu.php" ?>
     <div class="row justify-content-center my-3">
       <form class="form-inline">
         <label class="sr-only" for="dateSelector">Datum:</label>
