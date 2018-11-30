@@ -1,13 +1,4 @@
 <?php
-function getDatabaseConnection($dbServer, $dbUser, $dbPassword, $dbName)
-{
-  $conn = new mysqli($dbServer, $dbUser, $dbPassword, $dbName);
-  if ($conn->connect_error)
-  {
-    die("Connection failed: " . $conn->connect_error);
-  }
-  return $conn;
-}
 
 function displayData($tableName, $columnFactors, $conn)
 {
@@ -71,4 +62,37 @@ function columnDataAsJson($tableName, $columnName, $columnFactor, $columnOffset,
   }
   echo "]";
 }
+
+function renderWindSpeedSelector($min, $max, $default, $withoutBound, $selectId, $class)
+{
+	echo '<select id="' . $selectId . '" name="' . $selectId . '" class="' . $class . '" onchange="loadDataAndUpdate()">';
+	for ($i = $min; $i <= $max; $i++)
+	{
+		$selectedString = ($i == $default ? ' selected="selected"' : '');
+		echo '<option value="' .$i . '"' . $selectedString . '>' .$i . ' kt</option>';
+	}
+	if ($withoutBound)
+	{
+		$selectedString = ($i == $default ? ' selected="selected"' : '');
+		echo '<option value="-"' . $selectedString . '> - </option>';
+	}
+	echo "</select>";
+}
+
+function renderWindDirectionSelector($min, $max, $default, $withoutBound, $selectId, $class)
+{
+	echo '<select id="' . $selectId . '" name="' . $selectId . '" class="' . $class . '" onchange="loadDataAndUpdate()">';
+	for ($i = $min; $i <= $max; $i++)
+	{
+		$selectedString = ($i == $default ? ' selected="selected"' : '');
+		echo '<option value="' .$i . '"' . $selectedString . '>' .$i . ' kt</option>';
+	}
+	if ($withoutBound)
+	{
+		$selectedString = ($i == $default ? ' selected="selected"' : '');
+		echo '<option value="-"' . $selectedString . '> - </option>';
+	}
+	echo "</select>";
+}
+
 ?>

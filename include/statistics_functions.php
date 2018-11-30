@@ -1,16 +1,6 @@
 <?php
 include "date_functions.php";
 
-function getDatabaseConnection($dbServer, $dbUser, $dbPassword, $dbName)
-{
-  $conn = new mysqli($dbServer, $dbUser, $dbPassword, $dbName);
-  if ($conn->connect_error)
-  {
-    die("Connection failed: " . $conn->connect_error);
-  }
-  return $conn;
-}
-
 /**
  * Returns the speed direction histogram as an array. 
  * First key is minimal speed of bucket, second key is average direction of bucket, values are percentages of occurence.

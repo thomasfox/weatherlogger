@@ -9,6 +9,7 @@
 <body>
 <?php
 include "include/config.php";
+include "include/database_functions.php";
 include "include/statistics_functions.php";
 $conn = getDatabaseConnection($dbServer, $dbUser, $dbPassword, $dbName);
 ?>
