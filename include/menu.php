@@ -10,6 +10,9 @@
       <li class="nav-item">
 <?php printNavItem("wind_statistics_text.php", "Windstatistik-Tabelle"); ?>
       </li>
+      <li class="nav-item">
+<?php printNavItem("correlations.php", "Autokorrelation"); ?>
+      </li>
     </ul>
   </div>
 </nav>

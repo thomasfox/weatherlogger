@@ -2,30 +2,13 @@
 header('Content-Type: application/json');
 include "include/config.php";
 include "include/query_functions.php";
+include "include/date_functions.php";
 
 $conn = getDatabaseConnection($dbServer, $dbUser, $dbPassword, $dbName);
 $table = $_GET["table"];
 $column = $_GET["column"];
 
-$timeFrom = $_GET["timeFrom"];
-if($timeFrom == null)
-{
-  $timeFrom = "00:00:00";
-}
-
-$timeTo = $_GET["timeTo"];
-if($timeTo == null)
-{
-  $timeTo = "24:00:00";
-}
-
-$date = $_GET["date"];
-if($date == null)
-{
-  $date = new DateTime().format("Y-m-d");
-}
-$dateFrom = DateTime::createFromFormat("Y-m-d H:i:s", $date . ' ' . $timeFrom);
-$dateTo = DateTime::createFromFormat("Y-m-d H:i:s", $date . ' ' . $timeTo);
+$dateFromTo = getDateFromTo();
 
 $average = $_GET["average"];
 if($average == null)
@@ -55,5 +38,5 @@ if ($table == "temperature" && $column =="temperature")
 {
   $offset=100;
 }
-columnDataAsJson($table, $column, $factor, $offset, $dateFrom, $dateTo, $conn, $average);
+columnDataAsJson($table, $column, $factor, $offset, $dateFromTo[0], $dateFromTo[1], $conn, $average);
 ?>

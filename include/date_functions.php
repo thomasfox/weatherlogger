@@ -34,6 +34,16 @@ function renderTimes($offset, $default, $selectId, $class)
   echo "</select>";
 }
 
+function renderHours($end, $selectId, $class)
+{
+	echo '<select id="' . $selectId . '" name="' . $selectId . '" class="' . $class . '" onchange="loadDataAndUpdate()">';
+	for ($i = 1; $i <= $end + $offset; $i++)
+	{
+		echo '<option value="' .$i . '">' .$i . '</option>';
+	}
+	echo "</select>";
+}
+
 function retrieveDateFromDb($sql, $columnName, $conn, $displayName, $echoResult = false)
 {
 	$databaseTime = DateTime::createFromFormat("Y-m-d H:i:s", "1970-01-01 00:00:00");
@@ -73,4 +83,52 @@ function getMinDate($tablename, $conn)
 	return retrieveDateFromDb("SELECT min(time) as mintime FROM " . $tablename, "mintime", $conn, "first " . $tablename . " entry");
 }
 
+function getDateFromTo()
+{
+	if (!isset($_GET["date"]))
+	{
+		$now = new DateTime();
+		$date = $now->format("Y-m-d");
+	}
+	else
+	{
+		$date = $_GET["date"];
+	}
+	
+	if (!isset($_GET["timeFrom"]))
+	{
+		$timeFrom = "00:00:00";
+	}
+	else 
+	{
+		$timeFrom = $_GET["timeFrom"];
+	}
+	
+	$dateFrom = DateTime::createFromFormat("Y-m-d H:i:s", $date . ' ' . $timeFrom);
+	
+	if (isset($_GET["timeTo"]))
+	{
+		$timeTo = $_GET["timeTo"];
+	}
+	else if (isset($_GET["hours"]))
+	{
+		$hours = $_GET["hours"];
+	}
+	else
+	{
+		$timeTo = "24:00:00";
+	}
+	
+	if (isset($timeTo))
+	{
+		$dateTo = DateTime::createFromFormat("Y-m-d H:i:s", $date . ' ' . $timeTo);
+	}
+	else
+	{
+		$dateTo = clone $dateFrom;
+		$dateTo->add(new DateInterval('PT' . $hours . 'H'));
+	}
+	
+	return array($dateFrom, $dateTo);
+}
 ?>
