@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Wetterdaten abfragen</title>
+<title>SVS Wetter - Tagesdaten</title>
 <meta charset="UTF-8"> 
 <link rel="stylesheet" href="css/bootstrap.min.css" />
 <link rel="stylesheet" href="css/weatherlogger.css" />
