@@ -5,6 +5,7 @@
 <body>
 <?php
 include "include/config.php";
+include "include/database_functions.php";
 include "include/functions.php";
 include "include/date_functions.php";
 
@@ -27,6 +28,8 @@ $windspeedGustsRecorded = (int) ($windspeedGusts * 10);
 $winddirection = (int) $data[3];
 $temperature = (float) $data[4];
 $temperatureRecorded = (int) (($temperature * 10) + 1000);
+$waterTemperature = (float) $data[20];
+$waterTemperatureRecorded = (int) (($waterTemperature * 10) + 1000);
 $humidity = (float) $data[5];
 $pressure = (float) $data[6];
 $pressureRecorded = (int) ($pressure * 10);
@@ -41,10 +44,7 @@ $yearlyRainRecorded = (int) ($yearlyRain * 10);
 //echo 'Feuchtigkeit in %: ' . $humidity . '<br/>';
 //echo 'Luftruck*10 in hPa: ' . $pressureRecorded . '<br/>';
 
-$conn = new mysqli($dbServer, $dbUser, $dbPassword, $dbName);
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+$conn = getDatabaseConnection($dbServer, $dbUser, $dbPassword, $dbName);
 
 echo '<br/>';
 $databaseTime = retrieveDateFromDb("SELECT NOW() as now", "now", $conn, "database time");
@@ -57,7 +57,9 @@ storeWhenThresholdIsReached("wind", $windData, $windStoreIntervalSeconds, $datab
 
 $temperatureData = array(
     "temperature"  => $temperatureRecorded,
-	"humidity" => $humidity);
+	"humidity" => $humidity,
+	"water_temperature" => $waterTemperatureRecorded,
+);
 storeWhenThresholdIsReached("temperature", $temperatureData, $temperatureStoreIntervalSeconds, $databaseTime, $conn);
 
 $pressureData = array(

@@ -18,6 +18,7 @@ CREATE TABLE `temperature` (
  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
  `temperature` smallint(6) DEFAULT NULL,
  `humidity` smallint(6) DEFAULT NULL,
+ `water_temperature` smallint(6) DEFAULT NULL,
  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 
