@@ -18,26 +18,26 @@ include "include/date_functions.php";
   <div class="container-fluid">
     <h2 class="text-center">Wind und Wetter - SVS Wetterstation</h2>
 <?php include "include/menu.php" ?>
-    <div class="row justify-content-center my-3">
+    <div class="row justify-content-center my-3 mb-2 ">
       <form class="form-inline">
         <label class="sr-only" for="dateSelector">Datum:</label>
 <?php
 $conn = getDatabaseConnection($dbServer, $dbUser, $dbPassword, $dbName);
 $currentDate = date("Y-m-d");
-renderDates("wind", $conn, $currentDate, 'dateSelector', 'form-control wl-mobile-form-enlarge mb-2 mr-sm-3');
+renderDates("wind", $conn, $currentDate, 'dateSelector', 'form-control wl-mobile-form-enlarge mr-sm-3');
 $conn->close();
 ?>
         <label class="sr-only" for="timeFromSelector">Time from:</label>
 <?php
-renderTimes(0, 0, 'timeSelectorFrom', 'form-control wl-mobile-form-enlarge mb-2');
+renderTimes(0, 0, 'timeSelectorFrom', 'form-control wl-mobile-form-enlarge');
 ?>
         <span class="mx-2">-</span>
         <label class="sr-only" for="dateSelector">Datum:</label>
 <?php
-renderTimes(1, 24, 'timeSelectorTo', 'form-control wl-mobile-form-enlarge mb-2 mr-sm-3');
+renderTimes(1, 24, 'timeSelectorTo', 'form-control wl-mobile-form-enlarge mr-sm-3');
 ?>
         <label class="sr-only" for="averageSelector" >Mittel über Punkte:</label>
-        <select class="form-control wl-mobile-form-enlarge mb-2 mr-sm-3" id="averageSelector" onchange="loadDataAndUpdateCharts()">
+        <select class="form-control wl-mobile-form-enlarge mr-sm-3" id="averageSelector" onchange="loadDataAndUpdate()">
           <option value="1">Wind: Kein Mitteln</option>
           <option value="10">Wind: 10 Punkte mitteln</option>
           <option value="50" selected="selected">Wind: 50 Punkte mitteln</option>
