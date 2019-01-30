@@ -25,7 +25,7 @@ include "include/date_functions.php";
 <?php
 $conn = getDatabaseConnection($dbServer, $dbUser, $dbPassword, $dbName);
 $currentDate = date("Y-m-d");
-renderDates("wind", $conn, $currentDate, 'dateSelector', 'form-control wl-mobile-form-enlarge mr-sm-3');
+renderDates("wind", $currentDate, 'dateSelector', 'form-control wl-mobile-form-enlarge mr-sm-3', $conn);
 $conn->close();
 ?>
         <label class="sr-only" for="timeFromSelector">Time from:</label>

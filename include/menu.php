@@ -11,7 +11,10 @@
 <?php printNavItem("wind_statistics_text.php", "Windstatistik-Tabelle"); ?>
       </li>
       <li class="nav-item">
-<?php printNavItem("correlations.php", "Autokorrelation"); ?>
+<?php printNavItem("timeline.php", "Zeiten-Abfrage"); ?>
+      </li>
+      <li class="nav-item">
+<?php printNavItem("correlations.php", "Autokorrelation(experimentell)"); ?>
       </li>
     </ul>
   </div>
