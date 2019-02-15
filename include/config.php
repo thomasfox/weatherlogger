@@ -18,6 +18,11 @@ $timeStoreIntervalSeconds = 60;
 $basicAuthUser = TODO;
 $basicAuthPassword = TODO;
 
+# Password to access admin functions
+$adminPassword = TODO;
+# number of minutes to which old wind records can be averaged
+$windAverageMinutes = 5;
+
 # We assume that insert is called every minute by a cron script. 
 # To get data more often than once per minute, we call ourselves repetitively again after a delay
 # Below are the configuration settings for the url of the include script,
