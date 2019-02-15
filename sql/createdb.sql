@@ -28,6 +28,7 @@ CREATE TABLE `wind` (
  `direction` smallint(6) DEFAULT NULL,
  `speed` smallint(6) DEFAULT NULL,
  `gusts` smallint(6) DEFAULT NULL,
+ `averaged` boolean default false,
  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 
@@ -46,3 +47,4 @@ CREATE TABLE `time` (
 create index idx_wind_speed on wind(speed);
 create index idx_wind_direction on wind (direction);
 create index idx_wind_time on wind (`time`);
+create index idx_wind_averaged on wind(averaged);
