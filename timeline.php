@@ -13,9 +13,6 @@ include "include/query_functions.php";
 include "include/date_functions.php";
 ?>
 <body>
-  <script src="js/moment.min.js"></script>
-  <script src="js/Chart.min.js"></script>
-  
   <div class="container-fluid">
     <h2 class="text-center">Zeiten für Windstärke und -richtung</h2>
 <?php include "include/menu.php" ?>
