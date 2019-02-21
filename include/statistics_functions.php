@@ -383,9 +383,17 @@ function countInDb($sql, $conn)
   return null;
 }
 
-function getAndRenderFromTo($conn)
+function getAndRenderFromTo($conn, $onlyAveraged=false)
 {
-	if (isset($_GET['dateSelectorFrom']) && isset($_GET['timeSelectorFrom']))
+    if ($onlyAveraged)
+    {
+        $table = 'wind WHERE averaged is false';
+    }
+    else 
+    {
+        $table = 'wind';
+    }
+    if (isset($_GET['dateSelectorFrom']) && isset($_GET['timeSelectorFrom']))
 	{
 		$fromDate = $_GET['dateSelectorFrom'];
 		$fromTime = $_GET['timeSelectorFrom'];
@@ -393,8 +401,8 @@ function getAndRenderFromTo($conn)
 	}
 	else
 	{
-		$from = getMinDate("wind", $conn)->format('Y-m-d H:i:s');
-		$fromDate = $arr = explode(" ", $from, 2)[0];
+	    $from = getMinDate($table, $conn)->format('Y-m-d H:i:s');
+		$fromDate = explode(" ", $from, 2)[0];
 		$fromTime = 0;
 	}
 	
@@ -406,15 +414,15 @@ function getAndRenderFromTo($conn)
 	}
 	else
 	{
-		$to = getMaxDate("wind", $conn)->format('Y-m-d H:i:s');
-		$toDate = $arr = explode(" ", $to, 2)[0];
+	    $to = getMaxDate($table, $conn)->format('Y-m-d H:i:s');
+		$toDate = explode(" ", $to, 2)[0];
 		$toTime = 24;
 	}
 	echo '<label class="my-1 mx-2" for="dateSelectorFrom">von</label>';
-	renderDates("wind", $fromDate, 'dateSelectorFrom', 'form-control wl-mobile-form-enlarge mx-2', $conn);
+	renderDates($table, $fromDate, 'dateSelectorFrom', 'form-control wl-mobile-form-enlarge mx-2', $conn);
 	renderTimes(0, $fromTime, 'timeSelectorFrom', 'form-control wl-mobile-form-enlarge mx-2');
 	echo '<label class="my-1 mx-2" for="dateSelectorTo">bis</label>';
-	renderDates("wind", $toDate, 'dateSelectorTo', 'form-control wl-mobile-form-enlarge mx-2', $conn);
+	renderDates($table, $toDate, 'dateSelectorTo', 'form-control wl-mobile-form-enlarge mx-2', $conn);
 	renderTimes(1, $toTime, 'timeSelectorTo', 'form-control wl-mobile-form-enlarge mx-2');
 	return array($from, $to);
 }

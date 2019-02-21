@@ -99,6 +99,27 @@ function loadChartData(table, column, config, date, timeFrom, timeTo, average, o
 	request.send();
 }
 
+function readAveraged(table, date, timeFrom, timeTo, onReady) {
+	var clientId = '<?php echo $basicAuthUser; ?>';
+	var clientSecret = '<?php echo $basicAuthPassword; ?>';
+
+	var authorizationBasic = window.btoa(clientId + ':' + clientSecret);
+
+	var request = new XMLHttpRequest();
+	var url = "queryaveraged.php?table=" + table + "&date=" + date+ "&timeFrom=" + timeFrom+ "&timeTo=" + timeTo;
+	request.open('GET', url, true);
+	
+	request.responseType = "json";
+	request.setRequestHeader('Authorization', 'Basic ' + authorizationBasic);
+	request.setRequestHeader('Accept', 'application/json');
+
+	request.onload = function () {
+		var response = request.response;
+		onReady(response);
+	};
+	request.send();
+}
+
 function showChart(table, column, label, date, timeFrom, timeTo, average, canvasId) {
 	var color = Chart.helpers.color;
 	var config = {
@@ -152,10 +173,8 @@ function showChart(table, column, label, date, timeFrom, timeTo, average, canvas
 		}
 	};
 
-	loadChartData(table, column, config, date, timeFrom, timeTo, average, function() {
-		var ctx = document.getElementById(canvasId).getContext('2d'); 
-		window[table + "_" + column] = new Chart(ctx, config);
-	})
+	var ctx = document.getElementById(canvasId).getContext('2d'); 
+	window[table + "_" + column] = new Chart(ctx, config);
 }
 
 function mobile()
@@ -165,12 +184,33 @@ function mobile()
 
 function loadDataAndUpdate()
 {
+	readAveraged("wind", document.getElementById('dateSelector').value, document.getElementById('timeSelectorFrom').value, document.getElementById('timeSelectorTo').value, function(averaged) {modifyAveragedSelector(averaged); loadAllChartData()})
+}
+
+function loadAllChartData()
+{
 	loadChartData("wind", "speed", window.wind_speed.config, document.getElementById('dateSelector').value, document.getElementById('timeSelectorFrom').value, document.getElementById('timeSelectorTo').value, document.getElementById('averageSelector').value, function() {window.wind_speed.update();})
 	loadChartData("wind", "direction", window.wind_direction.config, document.getElementById('dateSelector').value, document.getElementById('timeSelectorFrom').value, document.getElementById('timeSelectorTo').value, document.getElementById('averageSelector').value, function() {window.wind_direction.update();})
 	loadChartData("temperature", "temperature", window.temperature_temperature.config, document.getElementById('dateSelector').value, document.getElementById('timeSelectorFrom').value, document.getElementById('timeSelectorTo').value, 1, function() {window.temperature_temperature.update();})
 	loadChartData("temperature", "humidity", window.temperature_humidity.config, document.getElementById('dateSelector').value, document.getElementById('timeSelectorFrom').value, document.getElementById('timeSelectorTo').value, 1, function() {window.temperature_humidity.update();})
 	loadChartData("pressure", "pressure", window.pressure_pressure.config, document.getElementById('dateSelector').value, document.getElementById('timeSelectorFrom').value, document.getElementById('timeSelectorTo').value, 1, function() {window.pressure_pressure.update();})
 	loadChartData("rain", "yearly", window.rain_yearly.config, document.getElementById('dateSelector').value, document.getElementById('timeSelectorFrom').value, document.getElementById('timeSelectorTo').value, 1, function() {window.rain_yearly.update();})
+}
+
+function modifyAveragedSelector(isAveraged)
+{
+	console.log('averaged: ' + isAveraged)
+	var averageSelector = document.getElementById("averageSelector");
+	if (isAveraged) {
+		averageSelector.style.visibility = "hidden";
+		averageSelector.value = "1";
+	} else {
+		if (averageSelector.style.visibility == "hidden")
+		{
+			averageSelector.value = "50";
+		}
+		averageSelector.style.visibility = "visible";
+	}
 }
 
 window.onload = function() {
@@ -189,6 +229,7 @@ window.onload = function() {
 	showChart("temperature", "humidity", 'Luftfeuchtigkeit [%]', document.getElementById('dateSelector').value, document.getElementById('timeSelectorFrom').value, document.getElementById('timeSelectorTo').value, 1, 'humidityCanvas');
 	showChart("pressure", "pressure", 'Luftdruck [hPa]', document.getElementById('dateSelector').value, document.getElementById('timeSelectorFrom').value, document.getElementById('timeSelectorTo').value, 1, 'pressureCanvas');
 	showChart("rain", "yearly", 'Regenmenge Jahr [mm]', document.getElementById('dateSelector').value, document.getElementById('timeSelectorFrom').value, document.getElementById('timeSelectorTo').value, 1, 'rainCanvas');
+	loadDataAndUpdate();
 };
   </script>
 </body>

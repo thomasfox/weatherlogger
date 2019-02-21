@@ -19,7 +19,7 @@ $conn = getDatabaseConnection($dbServer, $dbUser, $dbPassword, $dbName);
     <div class="row justify-content-center my-3">
       <form class="form-inline" id="dateSelectForm">
 <?php
-$fromTo = getAndRenderFromTo($conn);
+$fromTo = getAndRenderFromTo($conn, true);
 ?>
       </form>
     </div>

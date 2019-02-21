@@ -65,6 +65,36 @@ function columnDataAsJson($tableName, $columnName, $columnFactor, $columnOffset,
   echo "]";
 }
 
+function echoAveraged($tableName, $dateFrom, $dateTo, $conn)
+{
+    $sql = "SELECT distinct(averaged) as averaged FROM " . $tableName . " WHERE time > '" . $dateFrom->format('Y-m-d H:i:s') . "' AND time <= '" . $dateTo->format('Y-m-d H:i:s') . "' ORDER BY time ASC";
+    $result = $conn->query($sql);
+    if ($conn->errno == 0 && $result->num_rows > 0)
+    {
+        $averaged = false;
+        while($row = $result->fetch_assoc())
+        {
+            $averagedValue = $row["averaged"];
+            if ($averagedValue == 1)
+            {
+                $averaged = true;
+            }
+        }
+        if ($averaged)
+        {
+            echo 'true';
+        }
+        else 
+        {
+            echo 'false';
+        }
+    }
+    else
+    {
+        echo 'false';
+    }
+}
+
 function timelineData($minSpeed, $maxSpeed, $minDirection, $maxDirection, $monthAndYear, $conn)
 {
 	$dateFrom = new DateTime($monthAndYear);
