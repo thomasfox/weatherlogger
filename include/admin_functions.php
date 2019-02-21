@@ -25,13 +25,13 @@ function averageWindInDb($dateTo, $windAverageMinutes, $adminPasswordFromUser, $
       {
         echo "date: " . $lowerDate->format('Y-m-d H:i:s') . '<br/>';
       }
-//      echo "lowerDate: " . $lowerDate->format('Y-m-d H:i:s'); 
-//      echo "higherDate: " . $higherDate->format('Y-m-d H:i:s'). '<br/>'; 
     
       $sql = 'select AVG(direction) as direction, AVG(speed) as speed, MAX(speed) as gusts '
           . 'from wind where time >= \'' . $lowerDate->format('Y-m-d H:i:s') . '\' and time <= \'' . $higherDate->format('Y-m-d H:i:s') . '\' and averaged=false';
+//      echo $sql;
       $result = $conn->query($sql);
     
+//      echo ' ' . $conn->errno . ' ' . $result->num_rows . '<br/>';
       if ($conn->errno == 0 && $result->num_rows > 0)
       {
         $row = $result->fetch_assoc();

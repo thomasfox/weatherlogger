@@ -29,7 +29,7 @@ if (isset($_POST["average"]))
       <form class="form-inline" method="POST">
         <label class="mx-2" for="dateTo">Bis</label>
 <?php
-renderDates('wind', null, 'dateTo', 'form-control wl-mobile-form-enlarge mx-2', $conn);
+renderDates('wind WHERE averaged is false', null, 'dateTo', 'form-control wl-mobile-form-enlarge mx-2', $conn);
 ?>
         <label class="mx-2" for="adminPw">Admin-Passwort</label>
         <input type="password" class="form-control" class="mx-2" name="adminPw"></input>
