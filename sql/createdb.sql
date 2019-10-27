@@ -43,6 +43,11 @@ CREATE TABLE `time` (
  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 
+CREATE TABLE `locks` (
+ `id` varchar(50) NOT NULL,
+ `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ PRIMARY KEY (`id`)
+) ENGINE=InnoDB;
 
 create index idx_wind_speed on wind(speed);
 create index idx_wind_direction on wind (direction);

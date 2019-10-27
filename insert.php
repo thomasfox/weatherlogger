@@ -45,6 +45,7 @@ $yearlyRainRecorded = (int) ($yearlyRain * 10);
 //echo 'Luftruck*10 in hPa: ' . $pressureRecorded . '<br/>';
 
 $conn = getDatabaseConnection($dbServer, $dbUser, $dbPassword, $dbName);
+lock($conn, "insert");
 
 echo '<br/>';
 $databaseTime = retrieveDateFromDb("SELECT NOW() as now", "now", $conn, "database time");
@@ -85,7 +86,7 @@ $second = (int) $data[31];
 $day = (int) $data[35];
 $month = (int) $data[36];
 
-
+unlock($conn, "insert");
 $conn->close();
 ?>
 </body>
