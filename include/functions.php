@@ -37,9 +37,12 @@ function storeWhenThresholdIsReached($tablename, $valuesToStore, $storeIntervalS
   }
 }
 
-function call($url, $user, $password)
+function call($url, $user, $password, $silent)
 {
-  echo("<br/>call: " . $url);
+  if (!$silent)
+  {
+    echo("<br/>call: " . $url);
+  }
   if ($url == null)
   {
     return;
@@ -53,6 +56,9 @@ function call($url, $user, $password)
   $context = stream_context_create($opts);
 
   $file = file_get_contents($url, false, $context);
-  echo $file;
+  if (!$silent)
+  {
+    echo $file;
+  }
 }
 ?>
