@@ -65,33 +65,22 @@ function columnDataAsJson($tableName, $columnName, $columnFactor, $columnOffset,
   echo "]";
 }
 
-function echoAveraged($tableName, $dateFrom, $dateTo, $conn)
+function echoCount($tableName, $dateFrom, $dateTo, $conn)
 {
-    $sql = "SELECT distinct(averaged) as averaged FROM " . $tableName . " WHERE time > '" . $dateFrom->format('Y-m-d H:i:s') . "' AND time <= '" . $dateTo->format('Y-m-d H:i:s') . "' ORDER BY time ASC";
+    $sql = "SELECT count(*) as count FROM " . $tableName . " WHERE time > '" . $dateFrom->format('Y-m-d H:i:s') . "' AND time <= '" . $dateTo->format('Y-m-d H:i:s') . "' ORDER BY time ASC";
     $result = $conn->query($sql);
     if ($conn->errno == 0 && $result->num_rows > 0)
     {
-        $averaged = false;
-        while($row = $result->fetch_assoc())
+        $count = 0;
+        while ($row = $result->fetch_assoc())
         {
-            $averagedValue = $row["averaged"];
-            if ($averagedValue == 1)
-            {
-                $averaged = true;
-            }
+            $count = $row["count"];
         }
-        if ($averaged)
-        {
-            echo 'true';
-        }
-        else 
-        {
-            echo 'false';
-        }
+        echo $count;
     }
     else
     {
-        echo 'false';
+        echo '0';
     }
 }
 

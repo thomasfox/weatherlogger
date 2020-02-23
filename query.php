@@ -37,12 +37,6 @@ renderTimes(0, 0, 'timeSelectorFrom', 'form-control wl-mobile-form-enlarge');
 <?php
 renderTimes(1, 24, 'timeSelectorTo', 'form-control wl-mobile-form-enlarge mr-sm-3');
 ?>
-        <label class="sr-only" for="averageSelector" >Mittel über Punkte:</label>
-        <select class="form-control wl-mobile-form-enlarge mr-sm-3" id="averageSelector" onchange="loadDataAndUpdate()">
-          <option value="1">Wind: Kein Mitteln</option>
-          <option value="10">Wind: 10 Punkte mitteln</option>
-          <option value="50" selected="selected">Wind: 50 Punkte mitteln</option>
-        </select>
       </form>
     </div>
     <div class="row">
@@ -99,14 +93,14 @@ function loadChartData(table, column, config, date, timeFrom, timeTo, average, o
 	request.send();
 }
 
-function readAveraged(table, date, timeFrom, timeTo, onReady) {
+function readWindCount(date, timeFrom, timeTo, onReady) {
 	var clientId = '<?php echo $basicAuthUser; ?>';
 	var clientSecret = '<?php echo $basicAuthPassword; ?>';
 
 	var authorizationBasic = window.btoa(clientId + ':' + clientSecret);
 
 	var request = new XMLHttpRequest();
-	var url = "queryaveraged.php?table=" + table + "&date=" + date+ "&timeFrom=" + timeFrom+ "&timeTo=" + timeTo;
+	var url = "querywindcount.php?date=" + date + "&timeFrom=" + timeFrom+ "&timeTo=" + timeTo;
 	request.open('GET', url, true);
 	
 	request.responseType = "json";
@@ -115,12 +109,13 @@ function readAveraged(table, date, timeFrom, timeTo, onReady) {
 
 	request.onload = function () {
 		var response = request.response;
+        console.log("response is " + response);
 		onReady(response);
 	};
 	request.send();
 }
 
-function showChart(table, column, label, date, timeFrom, timeTo, average, canvasId) {
+function showChart(table, column, label, date, timeFrom, timeTo, canvasId) {
 	var color = Chart.helpers.color;
 	var config = {
 		type: 'line',
@@ -184,33 +179,19 @@ function mobile()
 
 function loadDataAndUpdate()
 {
-	readAveraged("wind", document.getElementById('dateSelector').value, document.getElementById('timeSelectorFrom').value, document.getElementById('timeSelectorTo').value, function(averaged) {modifyAveragedSelector(averaged); loadAllChartData()})
+	readWindCount(document.getElementById('dateSelector').value, document.getElementById('timeSelectorFrom').value, document.getElementById('timeSelectorTo').value, loadAllChartData)
 }
 
-function loadAllChartData()
+function loadAllChartData(countOfWindDataPoints)
 {
-	loadChartData("wind", "speed", window.wind_speed.config, document.getElementById('dateSelector').value, document.getElementById('timeSelectorFrom').value, document.getElementById('timeSelectorTo').value, document.getElementById('averageSelector').value, function() {window.wind_speed.update();})
-	loadChartData("wind", "direction", window.wind_direction.config, document.getElementById('dateSelector').value, document.getElementById('timeSelectorFrom').value, document.getElementById('timeSelectorTo').value, document.getElementById('averageSelector').value, function() {window.wind_direction.update();})
+    var windAverageTo = Math.ceil(countOfWindDataPoints/<?php echo $windGraphAveragePoints ?>);
+    // console.debug("wind count is " + countOfWindDataPoints + ", windAverageTo is " + windAverageTo);
+	loadChartData("wind", "speed", window.wind_speed.config, document.getElementById('dateSelector').value, document.getElementById('timeSelectorFrom').value, document.getElementById('timeSelectorTo').value, windAverageTo, function() {window.wind_speed.update();})
+	loadChartData("wind", "direction", window.wind_direction.config, document.getElementById('dateSelector').value, document.getElementById('timeSelectorFrom').value, document.getElementById('timeSelectorTo').value, windAverageTo, function() {window.wind_direction.update();})
 	loadChartData("temperature", "temperature", window.temperature_temperature.config, document.getElementById('dateSelector').value, document.getElementById('timeSelectorFrom').value, document.getElementById('timeSelectorTo').value, 1, function() {window.temperature_temperature.update();})
 	loadChartData("temperature", "humidity", window.temperature_humidity.config, document.getElementById('dateSelector').value, document.getElementById('timeSelectorFrom').value, document.getElementById('timeSelectorTo').value, 1, function() {window.temperature_humidity.update();})
 	loadChartData("pressure", "pressure", window.pressure_pressure.config, document.getElementById('dateSelector').value, document.getElementById('timeSelectorFrom').value, document.getElementById('timeSelectorTo').value, 1, function() {window.pressure_pressure.update();})
 	loadChartData("rain", "yearly", window.rain_yearly.config, document.getElementById('dateSelector').value, document.getElementById('timeSelectorFrom').value, document.getElementById('timeSelectorTo').value, 1, function() {window.rain_yearly.update();})
-}
-
-function modifyAveragedSelector(isAveraged)
-{
-	console.log('averaged: ' + isAveraged)
-	var averageSelector = document.getElementById("averageSelector");
-	if (isAveraged) {
-		averageSelector.style.visibility = "hidden";
-		averageSelector.value = "1";
-	} else {
-		if (averageSelector.style.visibility == "hidden")
-		{
-			averageSelector.value = "50";
-		}
-		averageSelector.style.visibility = "visible";
-	}
 }
 
 window.onload = function() {
@@ -223,12 +204,12 @@ window.onload = function() {
 			element.classList.add("form-control-lg");
 		}
 	}
-	showChart("wind", "speed", 'Windgeschwindigkeit [kt]', document.getElementById('dateSelector').value, document.getElementById('timeSelectorFrom').value, document.getElementById('timeSelectorTo').value, document.getElementById('averageSelector').value, 'windSpeedCanvas');
-	showChart("wind", "direction", 'Windrichtung [Grad]', document.getElementById('dateSelector').value, document.getElementById('timeSelectorFrom').value, document.getElementById('timeSelectorTo').value, document.getElementById('averageSelector').value, 'windDirectionCanvas');
-	showChart("temperature", "temperature", 'Temperatur [°C]', document.getElementById('dateSelector').value, document.getElementById('timeSelectorFrom').value, document.getElementById('timeSelectorTo').value, 1, 'temperatureCanvas');
-	showChart("temperature", "humidity", 'Luftfeuchtigkeit [%]', document.getElementById('dateSelector').value, document.getElementById('timeSelectorFrom').value, document.getElementById('timeSelectorTo').value, 1, 'humidityCanvas');
-	showChart("pressure", "pressure", 'Luftdruck [hPa]', document.getElementById('dateSelector').value, document.getElementById('timeSelectorFrom').value, document.getElementById('timeSelectorTo').value, 1, 'pressureCanvas');
-	showChart("rain", "yearly", 'Regenmenge Jahr [mm]', document.getElementById('dateSelector').value, document.getElementById('timeSelectorFrom').value, document.getElementById('timeSelectorTo').value, 1, 'rainCanvas');
+	showChart("wind", "speed", 'Windgeschwindigkeit [kt]', document.getElementById('dateSelector').value, document.getElementById('timeSelectorFrom').value, document.getElementById('timeSelectorTo').value, 'windSpeedCanvas');
+	showChart("wind", "direction", 'Windrichtung [Grad]', document.getElementById('dateSelector').value, document.getElementById('timeSelectorFrom').value, document.getElementById('timeSelectorTo').value, 'windDirectionCanvas');
+	showChart("temperature", "temperature", 'Temperatur [°C]', document.getElementById('dateSelector').value, document.getElementById('timeSelectorFrom').value, document.getElementById('timeSelectorTo').value, 'temperatureCanvas');
+	showChart("temperature", "humidity", 'Luftfeuchtigkeit [%]', document.getElementById('dateSelector').value, document.getElementById('timeSelectorFrom').value, document.getElementById('timeSelectorTo').value, 'humidityCanvas');
+	showChart("pressure", "pressure", 'Luftdruck [hPa]', document.getElementById('dateSelector').value, document.getElementById('timeSelectorFrom').value, document.getElementById('timeSelectorTo').value, 'pressureCanvas');
+	showChart("rain", "yearly", 'Regenmenge Jahr [mm]', document.getElementById('dateSelector').value, document.getElementById('timeSelectorFrom').value, document.getElementById('timeSelectorTo').value, 'rainCanvas');
 	loadDataAndUpdate();
 };
   </script>

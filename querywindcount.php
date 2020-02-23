@@ -10,5 +10,5 @@ $table = 'wind';
 
 $dateFromTo = getDateFromTo();
 
-echoAveraged($table, $dateFromTo[0], $dateFromTo[1], $conn);
+echoCount($table, $dateFromTo[0], $dateFromTo[1], $conn);
 ?>
