@@ -15,7 +15,7 @@ $data = explode(" ", $rawdata);
 //echo $data . '<br/>';
 
 $hour = (int) $data[29];
-$minute = (int) $data[20];
+$minute = (int) $data[30];
 $second = (int) $data[31];
 $day = (int) $data[35];
 $month = (int) $data[36];
