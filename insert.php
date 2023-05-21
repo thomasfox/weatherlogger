@@ -37,12 +37,23 @@ $rainRate = (float) $data[10];
 $rainRateRecorded = (int) ($rainRate * 1000);
 $yearlyRain = (float) $data[9];
 $yearlyRainRecorded = (int) ($yearlyRain * 10);
+
 //echo '<br/>durchschnittliche windgeschwindigkeit*10 in knoten: ' . $windspeedRecorded . '<br/>';
 //echo 'windgeschwindigkeit boen*10 in knoten: ' . $windspeedGustsRecorded . '<br/>';
 //echo 'windrichtung in Grad:' . $winddirection . '<br/>';
 //echo '(Temperatur*10)+1000 in Grad Celsius: ' . $temperatureRecorded . '<br/>';
+//echo '(Wassertemperatur*10)+1000 in Grad Celsius: ' . $waterTemperatureRecorded . '<br/>';
 //echo 'Feuchtigkeit in %: ' . $humidity . '<br/>';
 //echo 'Luftruck*10 in hPa: ' . $pressureRecorded . '<br/>';
+
+if ($temperatureRecorded == 1000 
+   || $waterTemperatureRecorded == 1000
+   || $pressureRecorded == 0)
+{
+  echo 'no data<br/>';
+  exit;
+}
+
 
 $conn = getDatabaseConnection($dbServer, $dbUser, $dbPassword, $dbName);
 lock($conn, "insert");
